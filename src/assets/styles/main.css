@@ -1,0 +1,167 @@
+:root {
+    --github-gray-light: #f6f8fa;
+    --github-gray: #6a737d;
+    --github-gray-dark: #586069;
+    --github-lighter-gray: #fafbfc;
+    --github-darker: #959da5;
+    --github-dark: #d1d5da;
+    --github-black: #24292e;
+    --github-blue: #0366d6;
+    --github-light-blue: #2188ff;
+    --github-lighter-blue-fade: #f1f8ff;
+    --github-lighter-blue: #79b8ff;
+    --github-green: #28a745;
+    --github-green-light: #34d058;
+    --github-green-lighter: #85e89d;
+    --github-green-dark: #22863a;
+    --github-purple: #6f42c1;
+    --github-yellow: #fdd33d;
+    --github-orange: #f66a0a;
+    --github-red: #d73f49;
+    --github-pink: #ea4aaa;
+
+    /* Text Sizes*/
+    --font-xs: 10px;
+    --font-sm: 12px;
+    --font-normal: 14px;
+    --font-md: 16px;
+    --font-lg: 20px;
+    --font-xl: 24px;
+}
+
+body,
+html {
+    scroll-behavior: smooth;
+    font-family: 'Helvetica', sans-serif;
+    color: var(--github-gray);
+    font-size: var(--font-normal);
+    font-weight: normal;
+    background-color: #ffffff;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* Positioning */
+.sticky {
+    position: sticky;
+    position: -webkit-sticky;
+}
+
+/* Display */
+.inline-flex {
+    display: inline-flex;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.grid {
+    display: grid;
+    gap: 0;
+    min-width: 0;
+    min-height: 0;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.overflow-none {
+    box-sizing: border-box;
+}
+
+/* Sizes */
+.w-full {
+    width: 100%;
+}
+
+.h-full {
+    height: 100%;
+}
+
+.w-screen {
+    width: 100vw;
+}
+
+.h-screen {
+    height: 100vh;
+}
+
+.w-99 {
+    width: 90vw;
+}
+
+.w-fit {
+    width: fit-content;
+    width: -moz-fit-content;
+    /* block-size: fit-content; */
+}
+
+.h-fit {
+    height: fit-content;
+    height: -moz-fit-content;
+    /* block-size: fit-content; */
+}
+
+.w-1p {
+    width: 25vw;
+}
+
+.w-3p {
+    width: 75vw;
+}
+
+/* Margins */
+.ml-auto {
+    margin-left: auto;
+}
+
+.mr-1 {
+    margin-right: 0.25rem;
+}
+
+/* Fonts */
+
+/* Miscelleneous */
+.rounded-full {
+    border-radius: 50%;
+}
+
+.rounded-full {
+    border-radius: 100%;
+}
+
+.bg-black {
+    background-color: var(--github-black);
+}
+
+.overflow-x-none {
+    overflow: hidden;
+}
+
+.overflow-none {
+    overflow: hidden;
+}
+
+.overflow-y-auto {
+    overflow-y: auto;
+}
+
+.focus-none:focus {
+    outline: none;
+}
