@@ -57,16 +57,66 @@
 
         <div class="pinned-container_wrap">
             <div class="pinned-container_title flex-row">
-                <p>Pinned</p>
+                <p class="mr-1">
+                    Pinned
+                    <span v-if="pinnedLoading === true">
+                        <svg
+                            style="
+                                box-sizing: content-box;
+                                color: var(--color-icon-primary);
+                            "
+                            viewBox="0 0 16 16"
+                            fill="none"
+                            width="16"
+                            height="16"
+                            class="spinner pinned-items-spinner js-pinned-items-spinner v-align-text-bottom ml-1"
+                        >
+                            <circle
+                                cx="8"
+                                cy="8"
+                                r="7"
+                                stroke="currentColor"
+                                stroke-opacity="0.25"
+                                stroke-width="2"
+                                vector-effect="non-scaling-stroke"
+                            ></circle>
+                            <path
+                                d="M15 8a7.002 7.002 0 00-7-7"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                vector-effect="non-scaling-stroke"
+                            >
+                                <animateTransform
+                                    attributeName="transform"
+                                    type="rotate"
+                                    from="0 8 8"
+                                    to="360 8 8"
+                                    dur="1s"
+                                    repeatCount="indefinite"
+                                ></animateTransform>
+                            </path>
+                        </svg>
+                    </span>
+                </p>
                 <!-- <a href="http://" target="_blank" rel="noopener noreferrer"> -->
                 <span>Customize your pins</span>
                 <!-- </a> -->
             </div>
 
             <div class="pinned-container grid">
-                <div class="pinned-card" v-for="n in 7" :key="n">
+                <div
+                    class="pinned-card"
+                    v-for="item in pinnedRepos"
+                    :key="item.repo"
+                >
                     <div class="flex-row">
-                        <a href="" class="pinned-card_title">
+                        <a
+                            :href="item.link"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="pinned-card_title"
+                        >
                             <svg
                                 class="octicon octicon-repo mr-2 text-gray flex-shrink-0"
                                 viewBox="0 0 16 16"
@@ -81,7 +131,7 @@
                                     d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"
                                 ></path>
                             </svg>
-                            Card {{ n }}</a
+                            {{ item.repo }}</a
                         >
                         <span>
                             <svg
@@ -102,17 +152,16 @@
                     </div>
 
                     <p class="pinned-card_description">
-                        Github User's Data querying app. Built with Vue, vanilla
-                        CSS, and a lot of love, deployed on vercel.
+                        {{ item.description }}
                     </p>
 
-                    <div class="pinned-card_summary">
+                    <div class="pinned-card_summary mt-auto">
                         <span class="language">
                             <span class="dot inline-block"></span>
-                            Vue
+                            {{ item.language }}
                         </span>
-                        <span class="fork">fork</span>
-                        <span class="license">license</span>
+                        <span class="fork">{{ item.forks }}</span>
+                        <span class="license">{{ item.license }}</span>
                         <a
                             href="http://"
                             target="_blank"
@@ -134,6 +183,7 @@
                                         d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25zm0 2.445L6.615 5.5a.75.75 0 01-.564.41l-3.097.45 2.24 2.184a.75.75 0 01.216.664l-.528 3.084 2.769-1.456a.75.75 0 01.698 0l2.77 1.456-.53-3.084a.75.75 0 01.216-.664l2.24-2.183-3.096-.45a.75.75 0 01-.564-.41L8 2.694v.001z"
                                     ></path>
                                 </svg>
+                                {{ item.stars }}
                             </span>
                         </a>
                     </div>
@@ -150,11 +200,90 @@
                         <div class="contributions_overview__summary">
                             summary
                         </div>
-                        <div class="contributions_overview__chart">chart</div>
+                        <div class="contributions_overview__chart flex-row">
+                            <svg
+                                style="
+                                    box-sizing: content-box;
+                                    color: var(--color-icon-primary);
+                                "
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                width="16"
+                                height="16"
+                                class="spinner pinned-items-spinner js-pinned-items-spinner v-align-text-bottom ml-1"
+                            >
+                                <circle
+                                    cx="8"
+                                    cy="8"
+                                    r="7"
+                                    stroke="currentColor"
+                                    stroke-opacity="0.25"
+                                    stroke-width="2"
+                                    vector-effect="non-scaling-stroke"
+                                ></circle>
+                                <path
+                                    d="M15 8a7.002 7.002 0 00-7-7"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    vector-effect="non-scaling-stroke"
+                                >
+                                    <animateTransform
+                                        attributeName="transform"
+                                        type="rotate"
+                                        from="0 8 8"
+                                        to="360 8 8"
+                                        dur="1s"
+                                        repeatCount="indefinite"
+                                    ></animateTransform>
+                                </path>
+                            </svg>
+                        </div>
                     </div>
                 </div>
 
-                <div class="contributions-activity">Activity</div>
+                <div class="contributions-activity">
+                    <p>Contribution Activity</p>
+                    <div class="contributions-activity_content flex-row">
+                        <svg
+                            style="
+                                box-sizing: content-box;
+                                color: var(--color-icon-primary);
+                            "
+                            viewBox="0 0 16 16"
+                            fill="none"
+                            width="16"
+                            height="16"
+                            class="spinner pinned-items-spinner js-pinned-items-spinner v-align-text-bottom ml-1"
+                        >
+                            <circle
+                                cx="8"
+                                cy="8"
+                                r="7"
+                                stroke="currentColor"
+                                stroke-opacity="0.25"
+                                stroke-width="2"
+                                vector-effect="non-scaling-stroke"
+                            ></circle>
+                            <path
+                                d="M15 8a7.002 7.002 0 00-7-7"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                vector-effect="non-scaling-stroke"
+                            >
+                                <animateTransform
+                                    attributeName="transform"
+                                    type="rotate"
+                                    from="0 8 8"
+                                    to="360 8 8"
+                                    dur="1s"
+                                    repeatCount="indefinite"
+                                ></animateTransform>
+                            </path>
+                        </svg>
+                    </div>
+                </div>
 
                 <button>Show more activity</button>
 
@@ -167,11 +296,13 @@
             </div>
 
             <div class="contributions_years flex-col">
-                <a href="http://" target="_blank" rel="noopener noreferrer"
-                    >2021</a
-                >
-                <a href="http://" target="_blank" rel="noopener noreferrer"
-                    >2020</a
+                <a
+                    href="http://"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    v-for="year in active_years"
+                    :key="year"
+                    >{{ year }}</a
                 >
             </div>
         </div>
@@ -180,6 +311,44 @@
 
 <script>
 export default {
+    props: {
+        pinnedRepos: {
+            type: Array,
+            required: true,
+        },
+
+        pinnedLoading: {
+            type: Boolean,
+            default: true,
+        },
+
+        userInfo: {
+            type: [Array, Object],
+            required: true,
+        },
+    },
+
+    data() {
+        return {
+            active_years: [],
+        }
+    },
+
+    methods: {
+        getActiveYears() {
+            for (
+                let i = new Date().getFullYear();
+                i >= parseInt(String(this.userInfo.created_at).slice(0, 4));
+                i--
+            ) {
+                this.active_years.push(i)
+            }
+        },
+    },
+
+    created() {
+        return this.getActiveYears()
+    },
 }
 </script>
 
@@ -227,6 +396,8 @@ a {
 
 .readme_content {
     color: var(--github-black);
+    font-family: 'Helvetica Bold';
+    font-style: normal;
     font-weight: bold;
 }
 
@@ -259,7 +430,8 @@ a {
     color: var(--github-blue);
 }
 
-.pinned-card {
+.pinned-card,
+.contributions-activity_content {
     padding: 1rem;
     border-radius: 0.5rem;
     border: 1px solid var(--github-dark);
@@ -268,6 +440,8 @@ a {
 .pinned-card_title {
     margin-bottom: 1rem;
     color: var(--github-blue);
+    font-family: 'Helvetica Bold';
+    font-style: normal;
     font-weight: bold;
 }
 
@@ -283,6 +457,8 @@ a {
 }
 
 .pinned-card_summary {
+    /* display: flex;
+    flex */
     font-size: var(--font-sm);
 }
 
@@ -298,6 +474,8 @@ span .dot {
 }
 
 .pinned-card_summary a:hover {
+    font-family: 'Helvetica Bold';
+    font-style: normal;
     font-weight: bold;
 }
 
@@ -343,6 +521,8 @@ span .dot {
     padding: 0.75rem 0;
     color: var(--github-blue);
     font-size: var(--font-sm);
+    font-family: 'Helvetica Bold';
+    font-style: normal;
     font-weight: bold;
     text-align: center;
     border-radius: 0.5rem;
@@ -381,6 +561,12 @@ span .dot {
 .contributions_years a:focus {
     color: #ffffff;
     background-color: var(--github-blue);
+}
+
+.contributions_overview__chart,
+.contributions-activity_content {
+    justify-content: center;
+    align-items: center;
 }
 
 @media only screen and (max-width: 768px) {

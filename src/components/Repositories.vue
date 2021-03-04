@@ -18,34 +18,40 @@
         </div>
 
         <div class="repo-card">
-            <div class="repo-card_main grid">
+            <div
+                class="repo-card_main grid"
+                v-for="repo in repos"
+                :key="repo.id"
+            >
                 <div class="repo-card_details">
                     <div class="repo-card_name">
                         <a
-                            href="http://"
+                            :href="repo.svn_url"
                             target="_blank"
                             rel="noopener noreferrer"
-                            >ami-e</a
+                            >{{ repo.name }}</a
                         >
-                        <span>Private</span>
+                        <span v-if="repo.private === true">Private</span>
                     </div>
 
-                    <div class="fork-description">
+                    <div
+                        class="fork-description"
+                        v-if="repo.forked_from !== ''"
+                    >
                         Forked from
                         <a
                             href="http://"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            emmabostian/developer-portfolios
+                            repo.forked_from
                         </a>
                     </div>
                     <div class="repo-card_description">
-                        A mini-contact app. Built with vue, axios, tailwind and
-                        love, deployed on netlify.
+                        {{ repo.description }}
                     </div>
 
-                    <div class="repo-card_tags">
+                    <!-- <div class="repo-card_tags">
                         <a
                             href="http://"
                             target="_blank"
@@ -93,30 +99,40 @@
                         >
                             <span>vuejs</span>
                         </a>
-                    </div>
+                    </div> -->
 
                     <div class="repo-card_summary">
-                        <span class="language">
-                            <span class="dot inline-block"></span>
-                            Vue
+                        <span class="language" v-if="repo.language !== null">
+                            <span
+                                class="dot inline-block"
+                                :style="{
+                                    backgroundColor:
+                                        langColors[repo.language.toLowerCase()],
+                                }"
+                            ></span>
+                            {{ repo.language }}
                         </span>
                         <a
                             href="http://"
                             target="_blank"
                             rel="noopener noreferrer"
+                            v-if="repo.forks > 0"
                         >
-                            <span class="fork">fork</span>
+                            <span class="fork">{{ repo.forks_count }}</span>
                         </a>
-                        <span class="license">license</span>
-                        <a
+                        <!-- <span class="license" v-if="repo.licence !== null">{{
+                            repo.license.name
+                        }}</span> -->
+                        <!-- <a
                             href="http://"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
                             <span class="issue">1 issue needs help</span>
-                        </a>
-                        <span class="date">Updated 5 days ago</span>
-                        <!-- <relative-time datetime="2021-02-16T14:17:42Z" class="no-wrap" title="16 Feb 2021, 15:17 GMT+1">7 days ago</relative-time> -->
+                        </a> -->
+                        <span class="date"
+                            >Updated {{ repo.updated_at | diffForHumans }}</span
+                        >
                     </div>
                 </div>
 
@@ -159,20 +175,76 @@
         </div>
 
         <div class="paginate flex-row">
-            <router-link to="">
-                Previous
-                <!-- <button>Previous</button> -->
+            <router-link to="" custom>
+                <button disabled role="link">Previous</button>
             </router-link>
-            <router-link to="">
-                Next
-                <!-- <button>Next</button> -->
+            <router-link to="" custom>
+                <button role="link">Next</button>
             </router-link>
         </div>
     </div>
 </template>
 
 <script>
-export default {}
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import LocalizedFormat from 'dayjs/plugin/relativeTime'
+
+export default {
+    props: {
+        repos: {
+            type: [Array, Object],
+            required: true,
+        },
+    },
+
+    data() {
+        return {
+            langColors: {
+                vue: '#2c3e50',
+                javascript: '#f1e05a',
+                php: '#4f5d95',
+                'jupyter notebook': '#da5b0b',
+                python: '#3572a5',
+                html: '#e34c26',
+                css: '#563d7c',
+                java: '#b07219',
+                shell: '#89e051',
+            },
+        }
+    },
+
+    created() {
+        dayjs.extend(relativeTime, LocalizedFormat)
+    },
+
+    filters: {
+        diffForHumans(date) {
+            if (!date) {
+                return null
+            }
+
+            if (
+                dayjs(date)
+                    .fromNow()
+                    .includes('year')
+            ) {
+                return `on ${dayjs(date).format('D MMM YYYY')}`
+            }
+
+            if (
+                dayjs(date)
+                    .fromNow()
+                    .includes('month') &&
+                parseInt(String(date).slice(0, 4)) === new Date().getFullYear()
+            ) {
+                return `on ${dayjs(date).format('D MMM')}`
+            }
+
+            return dayjs(date).fromNow()
+        },
+    },
+}
 </script>
 
 <style scoped>
@@ -267,6 +339,8 @@ button.new-repo:focus {
     margin-right: 0.5rem;
     font-size: var(--font-lg);
     color: var(--github-blue);
+    font-family: 'Helvetica Bold';
+    font-style: normal;
     font-weight: bold;
 }
 
@@ -283,18 +357,17 @@ button.new-repo:focus {
 
 .repo-card_tags span {
     margin-right: 0.5rem;
-    padding: 0 0.5rem;
+    padding: 0.35rem 0.75rem;
     color: var(--github-blue);
     font-size: var(--font-xs);
-    font-weight: bold;
     border: 1px solid transparent;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     background-color: var(--github-lighter-blue-fade);
-    transition: all 1s ease;
+    transition: all 0.1s ease;
 }
 
 .repo-card_tags span:hover {
-    color: inherit;
+    background-color: var(--github-lighter-blue-fade-s);
 }
 
 .fork-description,
@@ -306,7 +379,7 @@ span .dot {
     width: 0.75rem;
     height: 0.75rem;
     border-radius: 100%;
-    background-color: var(--github-black);
+    /* background-color: var(--github-black); */
 }
 
 .repo-card_summary span:not(span .dot) {
@@ -343,31 +416,34 @@ a span.issue:hover {
     margin: 1rem 0 5rem 0;
 }
 
-.paginate a.router-link-exact-active.router-link-active {
+.paginate button {
     padding: 0.5rem 1rem;
-    color: var(---github-blue);
+    color: var(--github-blue);
+    font-size: var(--font-md);
     border: 1px solid var(--github-dark);
     background-color: var(--github-gray-light);
 }
 
-.paginate a.router-link-exact-active.router-link-active:first-child {
+.paginate a:first-child button {
     border-top-left-radius: 0.5rem;
     border-bottom-left-radius: 0.5rem;
 }
 
-.paginate a.router-link-exact-active.router-link-active:nth-child(2) {
+.paginate a:nth-child(2) button {
     border-top-right-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
+    border-left-color: transparent;
 }
 
-.paginate a.router-link-exact-active.router-link-active:hover,
-.paginate a.router-link-exact-active.router-link-active:focus {
+.paginate button:hover,
+.paginate button:focus,
+.paginate button.router-link-exact-active.router-link-active:focus {
     color: #ffffff;
-    background-color: var(---github-blue);
+    background-color: var(--github-blue);
+    outline: none;
 }
 
-/* when inactive */
-.paginate a.router-link-exact-active.router-link-active:first-child {
+.paginate a:first-child button {
     opacity: 0.5;
 }
 

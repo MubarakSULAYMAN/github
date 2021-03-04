@@ -249,6 +249,43 @@
                 </div>
 
                 <div class="error-card" v-if="hasError === true">
+                    <svg
+                        style="
+                            box-sizing: content-box;
+                            color: var(--color-icon-primary);
+                        "
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        width="32"
+                        height="32"
+                    >
+                        <circle
+                            cx="8"
+                            cy="8"
+                            r="7"
+                            stroke="currentColor"
+                            stroke-opacity="0.25"
+                            stroke-width="2"
+                            vector-effect="non-scaling-stroke"
+                        ></circle>
+                        <path
+                            d="M15 8a7.002 7.002 0 00-7-7"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            vector-effect="non-scaling-stroke"
+                        >
+                            <animateTransform
+                                attributeName="transform"
+                                type="rotate"
+                                from="0 8 8"
+                                to="360 8 8"
+                                dur="1s"
+                                repeatCount="indefinite"
+                            ></animateTransform>
+                        </path>
+                    </svg>
+                    <p class="error-msg">Loading activity...</p>
                     <p class="error-msg">
                         There was an error in loading the activity feed.
                         <router-link to="">Reload this page</router-link>.
@@ -352,15 +389,19 @@
                 <router-link to="" class="more">Explore more →</router-link>
             </div>
         </div>
+
+        <error-notification :is_warning="error_state">
+            {{ error_message }}
+        </error-notification>
     </div>
 </template>
 
 <script>
-// @ is an alias to /src
+import ErrorNotification from '@/components/ErrorNotification.vue'
 
 export default {
     name: 'Home',
-    components: {},
+    components: { ErrorNotification },
 
     methods: {
         goTo(route) {
@@ -370,7 +411,6 @@ export default {
 
     data() {
         return {
-            hasError: false,
             foot_links1: [
                 { name: 'Blog', link: '' },
                 { name: 'About', link: '' },
@@ -392,6 +432,11 @@ export default {
                 { name: 'Privacy', link: '' },
                 { name: 'Docs', link: '' },
             ],
+
+            hasError: false,
+
+            error_message: 'An error just occured. It should resolve soon.',
+            error_state: false,
         }
     },
 }
@@ -475,6 +520,8 @@ button.new-repo:focus {
     width: -moz-fit-content;
     margin-bottom: 0.25rem;
     color: var(--github-blue);
+    font-family: 'Helvetica Bold';
+    font-style: normal;
     font-weight: bold;
     text-decoration: none;
 }
@@ -503,6 +550,8 @@ hr {
 .title,
 .repo-foot p:first-child {
     color: var(--github-black);
+    font-family: 'Helvetica Bold';
+    font-style: normal;
     font-weight: bold;
 }
 
@@ -515,7 +564,9 @@ hr {
     border-radius: 0.25rem;
     color: var(--github-blue);
     font-size: var(--font-sm);
-    font-weight: 200;
+    font-family: 'Helvetica Light';
+    font-style: normal;
+    font-weight: lighter;
     background-color: transparent;
     transition: all 0.3s ease;
 }
@@ -599,6 +650,8 @@ a.router-link-exact-active.router-link-active.show-more:focus {
     a.router-link-exact-active.router-link-active,
 .fork-star_card a.router-link-exact-active.router-link-active.title {
     color: var(--github-black);
+    font-family: 'Helvetica Bold';
+    font-style: normal;
     font-weight: bold;
     text-decoration: none;
 }
@@ -737,6 +790,8 @@ p.note {
 }
 
 a.router-link-exact-active.router-link-active.name {
+    font-family: 'Helvetica Bold';
+    font-style: normal;
     font-weight: bold;
 }
 
@@ -778,6 +833,8 @@ footer div {
 }
 
 .feeds_tips p > span {
+    font-family: 'Helvetica Bold';
+    font-style: normal;
     font-weight: bold;
 }
 
@@ -785,7 +842,9 @@ footer {
     margin: 4rem 0 2rem 0;
     grid-template-columns: 40% 60%;
     font-size: var(--font-sm);
-    font-weight: 200;
+    font-family: 'Helvetica Light';
+    font-style: normal;
+    font-weight: lighter;
 }
 
 .foot-links {
@@ -834,6 +893,8 @@ ul[class*='foot-links__'] {
 
 .explore-card a.router-link-exact-active.router-link-active {
     color: var(--github-black);
+    font-family: 'Helvetica Bold';
+    font-style: normal;
     font-weight: bold;
     text-decoration: none;
 }

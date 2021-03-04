@@ -1,30 +1,18 @@
 <template>
-  <div id="app">
-    <main-nav />
-    <router-view />
-  </div>
+    <div id="app">
+        <the-nav />
+        <router-view />
+    </div>
 </template>
 
 <script>
-import MainNav from "@/views/layouts/MainNav.vue"
+import TheNav from '@/views/layouts/TheNav.vue'
 
 export default {
-  components: {
-    MainNav
-  }
+    components: {
+        TheNav,
+    },
 }
 </script>
 
-<style scoped>
-/* #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-} */
-
-/* #nav a.router-link-exact-active {
-  color: #42b983;
-} */
-</style>
+<style scoped></style>

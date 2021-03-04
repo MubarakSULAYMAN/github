@@ -9,6 +9,7 @@
     --github-blue: #0366d6;
     --github-light-blue: #2188ff;
     --github-lighter-blue-fade: #f1f8ff;
+    --github-lighter-blue-fade-s: #dbedff;
     --github-lighter-blue: #79b8ff;
     --github-green: #28a745;
     --github-green-light: #34d058;
@@ -35,6 +36,7 @@ html {
     font-family: 'Helvetica', sans-serif;
     color: var(--github-gray);
     font-size: var(--font-normal);
+    font-style: normal;
     font-weight: normal;
     background-color: #ffffff;
 }
@@ -43,6 +45,15 @@ html {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+}
+
+
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+:focus:not(:-moz-focusring) {
+    outline: none;
 }
 
 /* Positioning */
@@ -127,6 +138,10 @@ html {
 }
 
 /* Margins */
+.mt-auto {
+    margin-top: auto;
+}
+
 .ml-auto {
     margin-left: auto;
 }

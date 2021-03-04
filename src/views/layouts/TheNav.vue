@@ -58,11 +58,13 @@
             </span>
 
             <router-link
-                :to="route.link"
+                to="/in-view"
                 class="w-fit bg-black"
                 v-for="route in router_group"
                 :key="route.name"
             >
+                <!-- :disabled="!whateverActivatesThisLink"
+                :event="whateverActivatesThisLink ? 'click' : ''" -->
                 {{ route.name }}
             </router-link>
 
@@ -135,10 +137,12 @@
                 </span> -->
             </div>
 
-            <router-link to="" class="w-fit bg-black"> Dashboard </router-link>
+            <router-link to="/in-view" class="w-fit bg-black">
+                Dashboard
+            </router-link>
 
             <router-link
-                :to="route.link"
+                to="/in-view"
                 class="w-fit bg-black"
                 v-for="route in router_group"
                 :key="route.name"
@@ -146,13 +150,17 @@
                 {{ route.name }}
             </router-link>
 
-            <router-link to="" class="w-fit bg-black"> Settings </router-link>
+            <router-link to="/in-view" class="w-fit bg-black">
+                Settings
+            </router-link>
 
-            <router-link to="" class="w-fit bg-black">
+            <router-link to="/MubarakSULAYMAN" class="w-fit bg-black">
                 MubarakSULAYMAN
             </router-link>
 
-            <router-link to="" class="w-fit bg-black"> Sign out </router-link>
+            <router-link to="/in-view" class="w-fit bg-black">
+                Sign out
+            </router-link>
         </div>
     </div>
 </template>
@@ -204,6 +212,7 @@ export default {
     height: 4.5rem;
     padding: 0 2rem;
     align-items: center;
+    transition: all 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
 }
 
 svg {
@@ -257,6 +266,8 @@ input[type='text']:focus {
     right: 0.75rem;
     padding: 0.1rem 0.5rem;
     color: var(--github-darker);
+    font-family: 'Helvetica Bold';
+    font-style: normal;
     font-weight: bold;
     border: 1px solid var(--github-darker);
     border-radius: 0.25rem;
@@ -273,21 +284,22 @@ input[type='text']:focus {
     color: #ffffff;
 }
 
-.nav a.router-link-exact-active.router-link-active {
+.nav a {
     margin-left: 1rem;
     padding: 1.5rem 0;
     color: #ffffff;
+    font-family: 'Helvetica Bold';
+    font-style: normal;
     font-weight: bold;
     text-decoration: none;
     background-color: var(--github-black);
 }
 
-.nav a.router-link-exact-active.router-link-active:hover,
-.nav a.router-link-exact-active.router-link-active:focus {
+.nav a.router-link-exact-active.router-link-active {
     color: var(--github-dark);
 }
 
-.nav a.router-link-exact-active.router-link-active:hover {
+.nav a:hover {
     outline: none;
 }
 
@@ -313,7 +325,7 @@ input[type='text']:focus {
         width: 18rem;
     }
 
-    .nav a.router-link-exact-active.router-link-active {
+    .nav a {
         margin-left: 0.8rem;
     }
 }
@@ -332,7 +344,7 @@ input[type='text']:focus {
     }
 
     .input-wrap,
-    .nav a.router-link-exact-active.router-link-active,
+    .nav a,
     svg.octicon.octicon-plus,
     span.user-profile {
         display: none;
@@ -385,29 +397,33 @@ input[type='text']:focus {
         right: 0.75rem;
         padding: 0.1rem 0.5rem;
         color: var(--github-darker);
+        font-family: 'Helvetica Bold';
+        font-style: normal;
         font-weight: bold;
         border: 1px solid var(--github-darker);
         border-radius: 0.25rem;
         box-sizing: border-box;
     }
 
-    .drawer a.router-link-exact-active.router-link-active {
+    .drawer a {
         width: 100%;
         /* margin-left: 1rem; */
         padding: 0.75rem 0;
         color: #ffffff;
+        font-family: 'Helvetica Bold';
+        font-style: normal;
         font-weight: bold;
         text-decoration: none;
         border-top: 1px solid var(--github-darker);
         /* background-color: var(--github-black); */
     }
 
-    .drawer a.router-link-exact-active.router-link-active:hover,
-    .drawer a.router-link-exact-active.router-link-active:focus {
+    .drawer a:hover,
+    .drawer a.router-link-exact-active.router-link-active {
         color: var(--github-dark);
     }
 
-    .drawer a.router-link-exact-active.router-link-active:hover {
+    .drawer a:hover {
         outline: none;
     }
 }
