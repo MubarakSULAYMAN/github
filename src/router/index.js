@@ -9,6 +9,10 @@ const routes = [
         path: '/',
         name: 'Home',
         component: Home,
+        meta: {
+            auth: false,
+            title: 'GitHub',
+        },
     },
     {
         path: '/home',
@@ -18,17 +22,38 @@ const routes = [
         path: '/about',
         name: 'About',
         component: () => import('../views/About.vue'),
+        meta: {
+            auth: false,
+            title: 'About GitHub',
+        },
     },
     {
         path: '/in-view',
         name: 'Inview',
         component: () => import('../components/InView.vue'),
+        meta: {
+            auth: false,
+            title: 'Under construction',
+        },
+    },
+    {
+        path: '/not-available',
+        name: 'NotAvailable',
+        component: () => import('../components/NotAvailable.vue'),
+        meta: {
+            auth: false,
+            title: 'Not available',
+        },
     },
     {
         // path: '/:username(/^/MubarakSULAYMAN$/)',
-        path: '/MubarakSULAYMAN',
+        path: '/:username',
         name: 'Users',
         component: () => import('../views/pages/Users.vue'),
+        // meta: {
+        //     auth: false,
+        //     title: ''
+        // }
     },
     {
         path: '/:pathMatch(.*)*',
@@ -38,6 +63,15 @@ const routes = [
 ]
 
 const router = new VueRouter({
+    beforeEach(to, from, next) {
+        if (to.meta.title) {
+            window.document.title =
+                to.meta && to.meta.title ? to.meta.title : 'GitHub Clone'
+
+            next()
+        }
+    },
+
     mode: 'history',
     base: process.env.BASE_URL,
     routes,
@@ -45,7 +79,7 @@ const router = new VueRouter({
 
 router.resolve({
     name: 'PageNotFound',
-    params: { pathMatch: ['(/)MubarakSULAYMAN?tab=repositories(/)', ''] },
+    // params: { pathMatch: ['(/)MubarakSULAYMAN?tab=repositories(/)', ''] },
 }).href
 
 export default router
