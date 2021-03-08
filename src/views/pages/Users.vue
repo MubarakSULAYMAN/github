@@ -1,29 +1,31 @@
 <template>
     <div>
-        <not-available class="main-content" v-if="notAvailable === true" />
-        <div class="users grid" v-else>
-            <user-menu-nav
-                class="top-nav sticky"
-                :inview="in_view"
-                :userInfo="userInfo"
-                @updateRoute="checkRoute"
-            />
+        <!-- <change-user-modal
+            v-if="requesting === false && presenting === false"
+        /> -->
 
-            <side-nav class="side-nav" :userInfo="userInfo" />
+        <animated-octocat v-if="requesting === true && presenting === false" />
 
-            <overview
-                class="main-content"
-                :pinnedRepos="pinnedRepos"
-                :pinnedLoading="pinnedLoading"
-                :userInfo="userInfo"
-                v-if="overview === true"
-            />
+        <not-available
+            class="main-content"
+            v-if="
+                requesting === false &&
+                    presenting === true &&
+                    notAvailable === true
+            "
+        />
 
-            <repositories
-                class="main-content"
-                :repos="repos"
-                v-if="repositories === true"
-            />
+        <div
+            class="users grid"
+            v-if="requesting === false && presenting === true"
+        >
+            <user-menu-nav class="top-nav sticky" @updateRoute="checkRoute" />
+
+            <side-nav class="side-nav" />
+
+            <overview class="main-content" v-if="overview === true" />
+
+            <repositories class="main-content" v-if="repositories === true" />
 
             <in-view class="main-content" v-if="in_view === true" />
             <footer>
@@ -62,7 +64,7 @@
                 </div>
             </footer>
 
-            <error-notification :is_warning="error_state">
+            <error-notification v-if="error_state === true">
                 {{ error_message }}
             </error-notification>
         </div>
@@ -70,6 +72,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import ErrorNotification from '@/components/ErrorNotification.vue'
 import InView from '@/components/InView.vue'
 import NotAvailable from '@/components/NotAvailable.vue'
@@ -77,7 +81,8 @@ import Overview from '@/components/Overview.vue'
 import Repositories from '@/components/Repositories.vue'
 import SideNav from '@/components/SideNav.vue'
 import UserMenuNav from '@/components/UserMenuNav.vue'
-import RequestService from '@/utils/services/RequestService'
+// import ChangeUserModal from '../../components/ChangeUserModal.vue'
+import AnimatedOctocat from '../../components/AnimatedOctocat.vue'
 
 export default {
     components: {
@@ -88,6 +93,8 @@ export default {
         ErrorNotification,
         InView,
         NotAvailable,
+        // ChangeUserModal,
+        AnimatedOctocat,
     },
 
     data() {
@@ -96,14 +103,6 @@ export default {
             overview: false,
             repositories: false,
             in_view: false,
-            error_message: 'An error just occured. It should resolve soon.',
-            error_state: false,
-            userInfoLoading: true,
-            userInfo: [],
-            repos: [],
-            starredRepos: [],
-            pinnedRepos: [],
-            pinnedLoading: true,
         }
     },
 
@@ -113,28 +112,25 @@ export default {
         },
 
         checkRoute() {
-            if (this.$route.fullPath === '/MubarakSULAYMAN') {
+            if (this.$route.fullPath === `/${this.username}`) {
                 this.repositories = false
                 this.in_view = false
                 this.overview = true
             } else if (
-                this.$route.fullPath === '/MubarakSULAYMAN?tab=repositories'
+                this.$route.fullPath === `/${this.username}?tab=repositories`
             ) {
                 this.in_view = false
                 this.overview = false
                 this.repositories = true
             } else if (
                 [
-                    '/MubarakSULAYMAN?tab=projects',
-                    '/MubarakSULAYMAN?tab=packages',
+                    `/${this.username}?tab=projects`,
+                    `/${this.username}?tab=packages`,
                 ].includes(this.$route.fullPath)
             ) {
                 this.overview = false
                 this.repositories = false
                 this.in_view = true
-            } else {
-                this.error_message =
-                    'An error occured, kindly check  your route.'
             }
         },
 
@@ -143,75 +139,36 @@ export default {
                 this.notAvailable = true
             }
         },
-
-        async fetchUsers() {
-            try {
-                let response = await RequestService.getUser()
-
-                this.userInfo = response.data
-                this.userInfoLoading = false
-            } catch (e) {
-                console.log('Error occured while fetching user.', e)
-            }
-        },
-
-        async fetchRepos() {
-            try {
-                let response = await RequestService.getRepos()
-                this.repos = response.data
-                console.log(this.repos)
-            } catch (e) {
-                console.log('Error occured while fetching repos.', e)
-            }
-        },
-
-        async fetchStarredRepos() {
-            try {
-                let response = await RequestService.getStarredRepos()
-                this.starredRepos = response.data
-            } catch (e) {
-                console.log('Error occured while fetching starred repos.', e)
-            }
-        },
-
-        async fetchPinnedRepos() {
-            try {
-                let response = await RequestService.getPinnedRepos()
-                this.pinnedRepos = response.data
-                this.pinnedLoading = false
-            } catch (e) {
-                console.log('Error occured while fetching pinned repos.', e)
-            }
-        },
     },
 
     created() {
-        return (
-            [this.checkRoute(), this.notAvailablePage()],
-            [
-                this.fetchUsers(),
-                this.fetchRepos(),
-                this.fetchStarredRepos(),
-                this.fetchPinnedRepos(),
-            ]
-        )
-    },
-
-    mounted() {
-        return this.checkRoute()
+        return [
+            this.$store.dispatch('fetchUsers'),
+            this.$store.dispatch('fetchRepos'),
+            this.$store.dispatch('fetchStarredRepos'),
+            this.$store.dispatch('fetchPinnedRepos'),
+        ]
     },
 
     computed: {
-        pageRoute() {
-            return [
-                this.$route.path,
-                Object.entries(this.$route.query)[0],
-                console.log(
-                    this.$route.fullPath ===
-                        '/MubarakSULAYMAN?tab=repositories',
-                ),
-            ]
-        },
+        ...mapState([
+            'requesting',
+            'presenting',
+            'error_message',
+            'error_state',
+        ]),
+
+        ...mapState({
+            username: state => state.user.username,
+            user_info: state => state.user.user_info,
+            user_info_loading: state => state.user.user_info_loading,
+            repos: state => state.repository.repos,
+            starred_repos: state => state.repository.starred_repos,
+        }),
+    },
+
+    mounted() {
+        return [this.checkRoute()]
     },
 }
 </script>
@@ -226,7 +183,7 @@ export default {
     grid-column: 1 / 3;
     grid-row: 1;
     top: -2rem;
-    background-color: #ffffff;
+    background-color: var(--github-white);
 }
 
 .side-nav {

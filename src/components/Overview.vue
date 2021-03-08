@@ -20,7 +20,7 @@
                                 d="M4 8a1 1 0 012 0v1a1 1 0 01-2 0V8zm2.078 2.492c-.083-.264.146-.492.422-.492h3c.276 0 .505.228.422.492C9.67 11.304 8.834 12 8 12c-.834 0-1.669-.696-1.922-1.508zM10 8a1 1 0 112 0v1a1 1 0 11-2 0V8z"
                             ></path>
                         </svg>
-                        <router-link to="">MubarakSULAYMAN</router-link>
+                        <router-link to="">{{ username }}</router-link>
                         /README
                     </span>
                     .md
@@ -59,7 +59,7 @@
             <div class="pinned-container_title flex-row">
                 <p class="mr-1">
                     Pinned
-                    <span v-if="pinnedLoading === true">
+                    <span v-if="pinned_loading === true">
                         <svg
                             style="
                                 box-sizing: content-box;
@@ -99,15 +99,13 @@
                         </svg>
                     </span>
                 </p>
-                <!-- <a href="http://" target="_blank" rel="noopener noreferrer"> -->
                 <span>Customize your pins</span>
-                <!-- </a> -->
             </div>
 
             <div class="pinned-container grid">
                 <div
                     class="pinned-card"
-                    v-for="item in pinnedRepos"
+                    v-for="item in pinned_repos"
                     :key="item.repo"
                 >
                     <div class="flex-row">
@@ -310,24 +308,9 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
-    props: {
-        pinnedRepos: {
-            type: Array,
-            required: true,
-        },
-
-        pinnedLoading: {
-            type: Boolean,
-            default: true,
-        },
-
-        userInfo: {
-            type: [Array, Object],
-            required: true,
-        },
-    },
-
     data() {
         return {
             active_years: [],
@@ -338,12 +321,21 @@ export default {
         getActiveYears() {
             for (
                 let i = new Date().getFullYear();
-                i >= parseInt(String(this.userInfo.created_at).slice(0, 4));
+                i >= parseInt(String(this.user_info.created_at).slice(0, 4));
                 i--
             ) {
                 this.active_years.push(i)
             }
         },
+    },
+
+    computed: {
+        ...mapState({
+            pinned_repos: state => state.repository.pinned_repos,
+            pinned_loading: state => state.repository.pinned_loading,
+            username: state => state.user.username,
+            user_info: state => state.user.user_info,
+        }),
     },
 
     created() {
@@ -527,7 +519,7 @@ span .dot {
     text-align: center;
     border-radius: 0.5rem;
     border: 1px solid var(--github-dark);
-    background-color: #ffffff;
+    background-color: var(--github-white);
 }
 
 .contributions-wrap button:hover {
@@ -559,7 +551,7 @@ span .dot {
 
 .contributions_years a:first-child,
 .contributions_years a:focus {
-    color: #ffffff;
+    color: var(--github-white);
     background-color: var(--github-blue);
 }
 

@@ -1,6 +1,6 @@
 <template>
-    <transition name="fly" v-if="is_warning === true">
-        <div class="warning">
+    <transition name="fly">
+        <div class="warning" v-if="error_state === true">
             <p>
                 <slot>An error just occured. It should resolve soon.</slot>
             </p>
@@ -9,19 +9,15 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
-    props: {
-        is_warning: {
-            type: Boolean,
-            default: false,
-        },
+    created() {
+        return [this.$store.dispatch('showWarning')]
     },
 
-    methods: {
-        showWarning() {
-            this.is_warning = true
-            setTimeout(() => (this.is_warning = false), 5000)
-        },
+    computed: {
+        ...mapState(['error_state']),
     },
 }
 </script>
@@ -40,7 +36,7 @@ export default {
     background-color: rgba(255, 255, 255, 0.8);
     box-shadow: 4px 4px red;
     transition: all 0.5s ease-in-out;
-    z-index: 999;
+    z-index: 9999;
     animation: shake 0.3s ease-in-out 0.3s infinite alternate;
 }
 

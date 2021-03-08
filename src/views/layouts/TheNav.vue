@@ -87,7 +87,6 @@
                     ></path>
                 </svg>
 
-                <!-- New repository Import repository New gist New organization New project -->
                 <svg
                     class="octicon octicon-plus"
                     viewBox="0 0 16 16"
@@ -102,11 +101,60 @@
                         d="M7.75 2a.75.75 0 01.75.75V7h4.25a.75.75 0 110 1.5H8.5v4.25a.75.75 0 11-1.5 0V8.5H2.75a.75.75 0 010-1.5H7V2.75A.75.75 0 017.75 2z"
                     ></path>
                 </svg>
-                <!-- <span class="dropdown-caret"></span> -->
+                <span class="user-profile dropdown" tabindex="0">
+                    <img
+                        :src="user_info.avatar_url"
+                        :alt="user_info.name"
+                        class="w-full h-full rounded-full"
+                    />
+                    <div class="dropdown-content">
+                        <p>
+                            <router-link :to="`/${username}`">
+                                Signed in as <br />
+                                <span>{{ username }}</span>
+                            </router-link>
+                        </p>
 
-                <span class="user-profile rounded-full">
-                    <img src="" alt="" class="w-full h-full" />
-                    <!-- caret -->
+                        <hr />
+
+                        <button class="set-status flex-row">
+                            <svg
+                                class="octicon octicon-smiley"
+                                viewBox="0 0 16 16"
+                                version="1.1"
+                                width="16"
+                                height="16"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zM5 8a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zM5.32 9.636a.75.75 0 011.038.175l.007.009c.103.118.22.222.35.31.264.178.683.37 1.285.37.602 0 1.02-.192 1.285-.371.13-.088.247-.192.35-.31l.007-.008a.75.75 0 111.222.87l-.614-.431c.614.43.614.431.613.431v.001l-.001.002-.002.003-.005.007-.014.019a1.984 1.984 0 01-.184.213c-.16.166-.338.316-.53.445-.63.418-1.37.638-2.127.629-.946 0-1.652-.308-2.126-.63a3.32 3.32 0 01-.715-.657l-.014-.02-.005-.006-.002-.003v-.002h-.001l.613-.432-.614.43a.75.75 0 01.183-1.044h.001z"
+                                ></path>
+                            </svg>
+                            Set status
+                        </button>
+
+                        <hr />
+
+                        <router-link
+                            :to="option.route"
+                            v-for="option in main_options"
+                            :key="option.name"
+                        >
+                            <!-- :to="{option.route, params: {username: username}}" -->
+                            Your {{ option.name }}
+                        </router-link>
+
+                        <hr />
+
+                        <router-link
+                            :to="option.route"
+                            v-for="option in other_options"
+                            :key="option.name"
+                        >
+                            {{ option.name }}
+                        </router-link>
+                    </div>
                 </span>
                 <!-- tooltip of "warning sign" and "Sorry, something went wrong. px-1 py-2" -->
             </div>
@@ -154,8 +202,8 @@
                 Settings
             </router-link>
 
-            <router-link to="/MubarakSULAYMAN" class="w-fit bg-black">
-                MubarakSULAYMAN
+            <router-link :to="`/${username}`" class="w-fit bg-black">
+                {{ username }}
             </router-link>
 
             <router-link to="/in-view" class="w-fit bg-black">
@@ -166,6 +214,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
     data() {
         return {
@@ -191,6 +240,29 @@ export default {
                     link: '',
                 },
             ],
+
+            other_options: [
+                {
+                    name: 'Upgrade',
+                    route: '/not-available',
+                },
+                {
+                    name: 'Feature preview',
+                    route: '/not-available',
+                },
+                {
+                    name: 'Help',
+                    route: '/not-available',
+                },
+                {
+                    name: 'Settings',
+                    route: '/not-available',
+                },
+                {
+                    name: 'Sign out',
+                    route: '/not-available',
+                },
+            ],
         }
     },
 
@@ -198,6 +270,46 @@ export default {
         goTo(route) {
             this.$router.push(route)
         },
+
+        derivedData() {
+            return [
+                {
+                    name: 'profile',
+                    route: `/${this.username}`,
+                },
+                {
+                    name: 'repository',
+                    route: `/${this.username}?tab=repositories`,
+                },
+                {
+                    name: 'projects',
+                    route: '/in-view',
+                },
+                {
+                    name: 'stars',
+                    route: '/in-view',
+                },
+                {
+                    name: 'gists',
+                    route: '/in-view',
+                },
+            ]
+        },
+    },
+
+    computed: {
+        main_options() {
+            return this.derivedData()
+        },
+
+        ...mapState({
+            username: state => state.user.username,
+            user_info: state => state.user.user_info,
+        }),
+    },
+
+    created() {
+        return [this.$store.dispatch('fetchUsers')]
     },
 }
 </script>
@@ -237,7 +349,7 @@ svg.octicon.octicon-three-bars {
 input[type='text'] {
     width: 20rem;
     padding: 0.5rem 0.75rem;
-    color: #ffffff;
+    color: var(--github-white);
     border: 1px solid var(--github-darker);
     border-radius: 0.4rem;
     transition: all 0.2s ease-in;
@@ -252,7 +364,7 @@ input[type='text']::-webkit-input-placeholder {
 input[type='text']:focus {
     width: var(--input-max-width);
     color: var(--github-black);
-    background-color: #ffffff;
+    background-color: var(--github-white);
     border-color: var(--github-blue);
     border-bottom: none;
     border-bottom-left-radius: 0;
@@ -281,13 +393,13 @@ input[type='text']:focus {
     width: var(--input-max-width);
     border-radius: 0.25rem;
     border-top: none;
-    color: #ffffff;
+    color: var(--github-white);
 }
 
 .nav a {
     margin-left: 1rem;
     padding: 1.5rem 0;
-    color: #ffffff;
+    color: var(--github-white);
     font-family: 'Helvetica Bold';
     font-style: normal;
     font-weight: bold;
@@ -295,9 +407,9 @@ input[type='text']:focus {
     background-color: var(--github-black);
 }
 
-.nav a.router-link-exact-active.router-link-active {
+/* .nav a.router-link-exact-active.router-link-active {
     color: var(--github-dark);
-}
+} */
 
 .nav a:hover {
     outline: none;
@@ -307,9 +419,112 @@ input[type='text']:focus {
     width: fit-content;
 }
 
-.user-profile {
-    width: 1rem;
-    height: 1rem;
+.user-profile img {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    position: absolute;
+    right: -1rem;
+    display: none;
+    width: 200px;
+    padding: 0.5rem 0;
+    font-family: 'Helvetica';
+    font-style: normal;
+    font-weight: normal;
+    border-radius: 0.5rem;
+    border: 1px solid var(--github-dark);
+    background-color: var(--github-white);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.dropdown-content p a span {
+    display: inline-block;
+    margin-top: 5px;
+    font-family: 'Helvetica Bold';
+    font-style: normal;
+    font-weight: bold;
+}
+
+.dropdown-content a:first-child:hover {
+    color: var(--github-black);
+    background-color: inherit;
+}
+
+.dropdown-content a {
+    display: block;
+    margin-left: 0 !important;
+    padding: 8px 16px;
+    color: var(--github-black);
+    font-family: 'Helvetica';
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: none;
+    background-color: inherit;
+}
+
+.dropdown-content a:hover {
+    color: var(--github-white);
+    font-family: 'Helvetica';
+    font-style: normal;
+    font-weight: normal;
+    background-color: var(--github-blue);
+}
+
+.dropdown:hover .dropdown-content,
+.dropdown:focus .dropdown-content {
+    display: block;
+}
+
+.dropdown-content hr {
+    width: 100%;
+    height: 1px;
+    margin: 0.5rem 0rem;
+    background-color: var(--github-dark);
+    border: none;
+}
+
+.dropdown-content::after {
+    content: ' ';
+    position: absolute;
+    bottom: 100%;
+    right: 10%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #ffffff transparent;
+}
+
+.dropdown-content:hover {
+    visibility: visible;
+}
+
+.set-status {
+    width: calc(100% - 2rem);
+    margin: 0 1rem;
+    padding: 0.5rem 0;
+    font-size: 12px;
+    color: var(--github-gray-dark);
+}
+
+.set-status svg {
+    margin-right: 0.5rem;
+    fill: var(--github-gray-dark);
+}
+
+.set-status:hover {
+    color: var(--github-blue);
+}
+
+.set-status:hover svg {
+    fill: var(--github-blue);
 }
 
 .drawer {
@@ -355,8 +570,6 @@ input[type='text']:focus {
         width: 100vw;
         height: fit-content;
         padding: 0 1.5rem 2rem;
-        /* margin-bottom: 1rem; */
-        /* z-index: 10 !important; */
     }
 
     .drawer .input-wrap {
@@ -368,7 +581,7 @@ input[type='text']:focus {
     .drawer .input[type='text'] {
         width: 100%;
         padding: 0.5rem 0.75rem;
-        color: #ffffff;
+        color: var(--github-white);
         border: 1px solid var(--github-darker);
         border-radius: 0.4rem;
         transition: all 0.2s ease-in;
@@ -383,11 +596,8 @@ input[type='text']:focus {
     .drawer .input[type='text']:focus {
         width: 100% !important;
         color: var(--github-black);
-        background-color: #ffffff;
+        background-color: var(--github-white);
         border-color: var(--github-blue);
-        /* border-bottom: none;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0; */
         outline: none;
     }
 
@@ -407,15 +617,13 @@ input[type='text']:focus {
 
     .drawer a {
         width: 100%;
-        /* margin-left: 1rem; */
         padding: 0.75rem 0;
-        color: #ffffff;
+        color: var(--github-white);
         font-family: 'Helvetica Bold';
         font-style: normal;
         font-weight: bold;
         text-decoration: none;
         border-top: 1px solid var(--github-darker);
-        /* background-color: var(--github-black); */
     }
 
     .drawer a:hover,

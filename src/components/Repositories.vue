@@ -38,14 +38,14 @@
                         class="fork-description"
                         v-if="repo.forked_from !== ''"
                     >
-                        Forked from
+                        <!-- Forked from
                         <a
                             href="http://"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            repo.forked_from
-                        </a>
+                            {{ repo.forked_from }}
+                        </a> -->
                     </div>
                     <div class="repo-card_description">
                         {{ repo.description }}
@@ -189,15 +189,9 @@
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import LocalizedFormat from 'dayjs/plugin/relativeTime'
+import { mapState } from 'vuex'
 
 export default {
-    props: {
-        repos: {
-            type: [Array, Object],
-            required: true,
-        },
-    },
-
     data() {
         return {
             langColors: {
@@ -212,6 +206,12 @@ export default {
                 shell: '#89e051',
             },
         }
+    },
+
+    computed: {
+        ...mapState({ repos: state => state.repository.repos }),
+        // pinned_repos: state => state.repository.pinned_repos,
+        // pinned_loading: state => state.repository.pinned_loading,
     },
 
     created() {
@@ -311,7 +311,7 @@ button.new-repo {
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 0.5rem;
-    color: #ffffff;
+    color: var(--github-white);
     background-color: var(--github-green);
     transition: all 0.3s ease;
 }
@@ -379,7 +379,6 @@ span .dot {
     width: 0.75rem;
     height: 0.75rem;
     border-radius: 100%;
-    /* background-color: var(--github-black); */
 }
 
 .repo-card_summary span:not(span .dot) {
@@ -438,7 +437,7 @@ a span.issue:hover {
 .paginate button:hover,
 .paginate button:focus,
 .paginate button.router-link-exact-active.router-link-active:focus {
-    color: #ffffff;
+    color: var(--github-white);
     background-color: var(--github-blue);
     outline: none;
 }

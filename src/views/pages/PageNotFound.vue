@@ -35,13 +35,13 @@ div.note {
 }
 
 p:first-child {
-    color: #ffffff;
+    color: var(--github-white);
     font-size: var(--font-xl);
 }
 
 p:nth-child(2) {
     font-size: var(--font-md);
-    color: #ffffff;
+    color: var(--github-white);
     font-family: 'Helvetica Light';
     font-style: normal;
     font-weight: lighter;
