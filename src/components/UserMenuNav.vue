@@ -24,7 +24,7 @@
                     {{ route.name }}
                     <span
                         class="repo-count"
-                        v-if="index === 1 && inview === false"
+                        v-if="index === 1 && in_view === false"
                     >
                         {{ user_info.public_repos }}
                     </span>
@@ -64,7 +64,7 @@
 import { mapState } from 'vuex'
 export default {
     props: {
-        inview: {
+        in_view: {
             type: Boolean,
             default: false,
         },

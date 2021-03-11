@@ -1,24 +1,20 @@
 <template>
     <div>
-        <!-- <change-user-modal
-            v-if="requesting === false && presenting === false"
-        /> -->
-
-        <animated-octocat v-if="requesting === true && presenting === false" />
+        <animated-octocat v-if="matchCheck(true, false, true)" />
 
         <not-available
             class="main-content"
-            v-if="
-                requesting === false &&
-                    presenting === true &&
-                    notAvailable === true
-            "
+            v-if="matchCheck(true, true, false)"
         />
 
-        <div
-            class="users grid"
-            v-if="requesting === false && presenting === true"
-        >
+        <invalid-user
+            class="main-content"
+            v-if="matchCheck(false, true, false)"
+        />
+
+        <broken-system v-if="matchCheck(true, true, true)" />
+
+        <div class="users grid" v-if="matchCheck(false, true, true)">
             <user-menu-nav class="top-nav sticky" @updateRoute="checkRoute" />
 
             <side-nav class="side-nav" />
@@ -63,11 +59,11 @@
                     <span>About</span>
                 </div>
             </footer>
-
-            <error-notification v-if="error_state === true">
-                {{ error_message }}
-            </error-notification>
         </div>
+
+        <error-notification v-if="error_state === true">
+            {{ error_message }}
+        </error-notification>
     </div>
 </template>
 
@@ -77,12 +73,13 @@ import { mapState } from 'vuex'
 import ErrorNotification from '@/components/ErrorNotification.vue'
 import InView from '@/components/InView.vue'
 import NotAvailable from '@/components/NotAvailable.vue'
+import InvalidUser from '@/components/InvalidUser.vue'
 import Overview from '@/components/Overview.vue'
 import Repositories from '@/components/Repositories.vue'
 import SideNav from '@/components/SideNav.vue'
 import UserMenuNav from '@/components/UserMenuNav.vue'
-// import ChangeUserModal from '../../components/ChangeUserModal.vue'
 import AnimatedOctocat from '../../components/AnimatedOctocat.vue'
+import BrokenSystem from '../../components/BrokenSystem.vue'
 
 export default {
     components: {
@@ -93,13 +90,13 @@ export default {
         ErrorNotification,
         InView,
         NotAvailable,
-        // ChangeUserModal,
+        InvalidUser,
         AnimatedOctocat,
+        BrokenSystem,
     },
 
     data() {
         return {
-            notAvailable: false,
             overview: false,
             repositories: false,
             in_view: false,
@@ -109,6 +106,45 @@ export default {
     methods: {
         goTo(route) {
             this.$router.push(route)
+        },
+
+        matchCheck(r, p, ue) {
+            return (
+                this.requesting === r &&
+                this.presenting === p &&
+                this.user_exist === ue
+            )
+        },
+
+        checkRouteName() {
+            if ([this.$route.path.slice(1)].includes(this.username)) {
+                // console.log('Username did not change.')
+
+                return [
+                    this.$store.dispatch('fetchUsers'),
+                    // console.log('Processing...'),
+                    this.$store.dispatch('fetchStarredRepos'),
+                    // console.log('Done!'),
+                ]
+            }
+
+            return [
+                // console.log('Username change.'),
+                this.$store.dispatch(
+                    'changeUsername',
+                    this.$route.path.slice(1),
+                ),
+                // console.log(this.username),
+                setTimeout(
+                    () => [
+                        this.$store.dispatch('fetchUsers'),
+                        this.$store.dispatch('fetchStarredRepos'),
+                        // console.log(this.username),
+                    ],
+                    100,
+                ),
+                // console.log(this.username),
+            ]
         },
 
         checkRoute() {
@@ -133,20 +169,13 @@ export default {
                 this.in_view = true
             }
         },
-
-        notAvailablePage() {
-            if (this.overview === false && this.repositories === false) {
-                this.notAvailable = true
-            }
-        },
     },
 
     created() {
         return [
-            this.$store.dispatch('fetchUsers'),
-            this.$store.dispatch('fetchRepos'),
-            this.$store.dispatch('fetchStarredRepos'),
-            this.$store.dispatch('fetchPinnedRepos'),
+            // console.log(this.$route),
+            // console.log(this.requesting, this.presenting, this.user_exist),
+            this.checkRouteName(),
         ]
     },
 
@@ -156,6 +185,7 @@ export default {
             'presenting',
             'error_message',
             'error_state',
+            'user_exist',
         ]),
 
         ...mapState({

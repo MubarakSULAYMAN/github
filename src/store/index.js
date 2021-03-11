@@ -12,6 +12,7 @@ export default new Vuex.Store({
         presenting: false,
         error_message: '',
         error_state: false,
+        user_exist: true,
     },
 
     mutations: {
@@ -33,6 +34,10 @@ export default new Vuex.Store({
 
         UPDATE_ERROR_STATE(state, error) {
             state.error_state = error
+        },
+
+        UPDATE_USER_EXIST(state, exist) {
+            state.user_exist = exist
         },
     },
 

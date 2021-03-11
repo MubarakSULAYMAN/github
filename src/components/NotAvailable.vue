@@ -1,10 +1,8 @@
 <template>
     <div class="flex-col">
         <div class="note">
-            <p>This is temporarily unavailable.</p>
-            <p>We will be working to deliver more functionalities.</p>
+            <p>Internet connection maybe bad or does not exist.</p>
         </div>
-        <img src="@/assets/images/github-home.png" alt="" />
         <the-shortcuts class="shortcuts" />
     </div>
 </template>
@@ -19,11 +17,16 @@ export default {
 <style scoped>
 div:not(.note) {
     position: relative;
-    width: 100%;
-    height: fit-content;
+    width: 100vw;
+    height: 100vh;
     font-family: 'Helvetica Rounded Bold';
     font-style: normal;
     font-weight: bold;
+    background-image: url('../assets/images/github-home.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-origin: border-box;
+    background-position: center;
 }
 
 div.note {

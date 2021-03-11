@@ -1,16 +1,14 @@
 <template>
     <div class="flex-col">
         <div class="note">
-            <p>At home but far away from home.</p>
-            <p>Out routes will always guide you rightly, try that!</p>
+            <p>Something went wrong, we are working hard to fix that.</p>
         </div>
-        <img src="@/assets/images/github-in-space.png" alt="" />
         <the-shortcuts class="shortcuts" />
     </div>
 </template>
 
 <script>
-import TheShortcuts from '../layouts/TheShortcuts.vue'
+import TheShortcuts from '../views/layouts/TheShortcuts.vue'
 export default {
     components: { TheShortcuts },
 }
@@ -19,11 +17,16 @@ export default {
 <style scoped>
 div:not(.note) {
     position: relative;
-    width: 100%;
-    height: fit-content;
+    width: 100vw;
+    height: 100vh;
     font-family: 'Helvetica Rounded Bold';
     font-style: normal;
     font-weight: bold;
+    background-image: url('../assets/images/github-security.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-origin: border-box;
+    background-position: center;
 }
 
 div.note {
@@ -34,13 +37,12 @@ div.note {
 }
 
 p:first-child {
-    color: var(--github-white);
+    color: var(--github-black);
     font-size: var(--font-xl);
 }
 
 p:nth-child(2) {
     font-size: var(--font-md);
-    color: var(--github-white);
     font-family: 'Helvetica Light';
     font-style: normal;
     font-weight: lighter;
@@ -59,8 +61,9 @@ img {
 @media only screen and (max-width: 768px) {
     div.note {
         position: absolute;
-        top: 0.5rem;
-        left: 0.5rem;
+        top: 0;
+        left: 0;
+        margin-top: 1rem;
     }
 
     p:first-child {
@@ -71,9 +74,9 @@ img {
         font-size: var(--font-normal);
     }
 
-    /* img {
+    img {
         margin-top: 1rem;
-    } */
+    }
 
     .shortcuts {
         position: absolute;
@@ -83,12 +86,6 @@ img {
 }
 
 @media only screen and (max-width: 425px) {
-    div.note {
-        position: absolute;
-        top: 0.25rem;
-        left: 0.25rem;
-    }
-
     div:not(.note) {
         justify-content: center;
         align-content: center;
@@ -96,11 +93,15 @@ img {
     }
 
     p:first-child {
-        font-size: var(--font-normal);
+        font-size: var(--font-md);
     }
 
     p:nth-child(2) {
         font-size: var(--font-xs);
+    }
+
+    img {
+        margin-bottom: 1rem;
     }
 }
 </style>

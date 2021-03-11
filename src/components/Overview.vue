@@ -329,6 +329,10 @@ export default {
         },
     },
 
+    created() {
+        return [this.$store.dispatch('fetchPinnedRepos'), this.getActiveYears()]
+    },
+
     computed: {
         ...mapState({
             pinned_repos: state => state.repository.pinned_repos,
@@ -336,10 +340,6 @@ export default {
             username: state => state.user.username,
             user_info: state => state.user.user_info,
         }),
-    },
-
-    created() {
-        return this.getActiveYears()
     },
 }
 </script>

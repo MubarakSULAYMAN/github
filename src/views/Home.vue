@@ -1,15 +1,21 @@
 <template>
     <div>
         <change-user-modal
-            v-if="requesting === false && presenting === false"
+            v-if="
+                matchCheck(false, false, true) || matchCheck(true, true, false)
+            "
         />
 
-        <animated-octocat v-if="requesting === true && presenting === false" />
+        <animated-octocat v-if="matchCheck(true, false, true)" />
 
-        <div
-            class="home grid"
-            v-if="requesting === false && presenting === true"
-        >
+        <invalid-user
+            class="main-content"
+            v-if="matchCheck(false, true, false)"
+        />
+
+        <broken-system v-if="matchCheck(true, true, true)" />
+
+        <div class="home grid" v-if="matchCheck(false, true, true)">
             <div class="side-nav sticky overflow-x-none overflow-y-auto">
                 <home-side-nav />
             </div>
@@ -31,8 +37,7 @@
     </div>
 </template>
 
-// api endpoints
-// https://api.github.com/users/MubarakSULAYMAN/received_events
+// api endpoints // https://api.github.com/users/MubarakSULAYMAN/received_events
 // https://api.github.com/users/MubarakSULAYMAN/events/public
 
 <script>
@@ -44,6 +49,8 @@ import HomeMainFeeds from '../components/HomeMainFeeds.vue'
 import HomeSideNav from '../components/HomeSideNav.vue'
 import ChangeUserModal from '../components/ChangeUserModal.vue'
 import AnimatedOctocat from '../components/AnimatedOctocat.vue'
+import InvalidUser from '../components/InvalidUser.vue'
+import BrokenSystem from '../components/BrokenSystem.vue'
 
 export default {
     name: 'Home',
@@ -54,11 +61,21 @@ export default {
         HomeSideNav,
         ChangeUserModal,
         AnimatedOctocat,
+        InvalidUser,
+        BrokenSystem,
     },
 
     methods: {
         goTo(route) {
             this.$router.push(route)
+        },
+
+        matchCheck(r, p, ue) {
+            return (
+                this.requesting === r &&
+                this.presenting === p &&
+                this.user_exist === ue
+            )
         },
     },
 
@@ -69,6 +86,7 @@ export default {
             'presenting',
             'error_message',
             'error_state',
+            'user_exist',
         ]),
     },
 }

@@ -6,7 +6,11 @@
         </div>
 
         <div class="wrapper">
-            <input type="text" placeholder="Find a repository..." />
+            <input
+                type="text"
+                placeholder="Find a repository..."
+                v-model="filter_term"
+            />
 
             <div class="repositories">
                 <div
@@ -29,13 +33,13 @@
                 to=""
                 class="show-more"
                 v-if="show_more"
-                @click.native="show_more = !show_more"
+                @click.native="updateRepos(), (show_more = !show_more)"
             >
                 <p>Show more</p>
-                <!-- 'Loading more' on full request -->
             </router-link>
-            <p v-if="!show_more && repos.length === 30">
-                Showing recent top 30 results
+            <p v-if="loading_more === true">Loading more...</p>
+            <p v-if="repos.length === 100">
+                Showing recent top 100 results
             </p>
 
             <hr class="after" />
@@ -60,7 +64,9 @@ import { mapState } from 'vuex'
 export default {
     data() {
         return {
+            main_repos: [],
             show_more: true,
+            filter_term: '',
         }
     },
 
@@ -77,25 +83,44 @@ export default {
             return this.repos
         },
 
-        checkRepos() {
-            if (this.repos.length > 7 && this.show_more === true) {
-                return this.extractRepos().slice(0, 7)
-            }
-
-            return this.extractRepos()
+        updateRepos() {
+            return [
+                this.$store
+                    .dispatch('fetchCustomRepos', [100, 1])
+                    .then(this.$store.dispatch('changeLoadingMore', false)),
+                this.$store.dispatch('changeLoadingMore', true),
+            ]
         },
     },
 
     computed: {
+        repos() {
+            return this.custom_repos
+        },
+
+        filteredList() {
+            return this.extractRepos().filter(repo => {
+                return `${repo.full_name}`
+                    .toLowerCase()
+                    .includes(this.filter_term.toLowerCase())
+            })
+        },
+
         newRepos() {
-            return this.checkRepos()
+            return this.filteredList
         },
 
         ...mapState({
             username: state => state.user.username,
-            repos: state => state.repository.repos,
+            loading_more: state => state.repository.loading_more,
+            repos: state => state.repository.custom_repos,
+            request_status: state => state.repository.request_status,
         }),
     },
+
+    // created() {
+    //     return [console.log(this.request_status)]
+    // },
 }
 </script>
 

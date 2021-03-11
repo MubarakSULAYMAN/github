@@ -25,7 +25,7 @@
                 width="32"
                 fill="#ffffff"
                 aria-hidden="true"
-                @click="goTo('/')"
+                @click="home"
             >
                 <path
                     fill-rule="evenodd"
@@ -68,7 +68,7 @@
                 {{ route.name }}
             </router-link>
 
-            <div class="nav_extras flex-row ml-auto">
+            <div class="nav_extras flex-row ml-auto" v-if="user_exist">
                 <svg
                     class="octicon octicon-bell"
                     viewBox="0 0 16 16"
@@ -271,6 +271,12 @@ export default {
             this.$router.push(route)
         },
 
+        home() {
+            return (
+                this.goTo('/'), this.$store.dispatch('fetchCustomRepos', [7, 1])
+            )
+        },
+
         derivedData() {
             return [
                 {
@@ -301,6 +307,8 @@ export default {
         main_options() {
             return this.derivedData()
         },
+
+        ...mapState(['user_exist']),
 
         ...mapState({
             username: state => state.user.username,
