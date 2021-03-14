@@ -12,7 +12,7 @@ export default new Vuex.Store({
         presenting: false,
         error_message: '',
         error_state: false,
-        user_exist: true,
+        user_exist: false,
     },
 
     mutations: {

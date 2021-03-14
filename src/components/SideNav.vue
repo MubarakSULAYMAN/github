@@ -234,6 +234,13 @@ export default {
     //     window.addEventListener('scroll', this.handleScroll)
     // },
 
+    created() {
+        return (
+            this.$store.dispatch('fetchUsers'),
+            console.log('Side nav is created')
+        )
+    },
+
     // watch: {
     //     this.scrollAction
     // }

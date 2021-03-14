@@ -22,7 +22,11 @@
 </template>
 
 <script>
-export default {}
+export default {
+    created() {
+        return console.log('Home explore feeds is created')
+    },
+}
 </script>
 
 <style scoped>

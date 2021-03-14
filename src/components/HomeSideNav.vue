@@ -85,10 +85,10 @@ export default {
 
         updateRepos() {
             return [
+                this.$store.dispatch('changeLoadingMore', true),
                 this.$store
                     .dispatch('fetchCustomRepos', [100, 1])
                     .then(this.$store.dispatch('changeLoadingMore', false)),
-                this.$store.dispatch('changeLoadingMore', true),
             ]
         },
     },
@@ -121,6 +121,10 @@ export default {
     // created() {
     //     return [console.log(this.request_status)]
     // },
+
+    created() {
+        return console.log('Home side nav is created')
+    },
 }
 </script>
 

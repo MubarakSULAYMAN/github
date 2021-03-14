@@ -1,6 +1,6 @@
 <template>
     <div>
-        <animated-octocat v-if="matchCheck(true, false, true)" />
+        <animated-octocat v-if="matchCheck(true, false, false)" />
 
         <not-available
             class="main-content"
@@ -124,25 +124,34 @@ export default {
                     this.$store.dispatch('fetchUsers'),
                     // console.log('Processing...'),
                     this.$store.dispatch('fetchStarredRepos'),
+                    this.$store.dispatch('fetchPinnedRepos'),
+                    this.$store.dispatch('fetchRepos', [30, 1]),
                     // console.log('Done!'),
                 ]
             }
 
             return [
                 // console.log('Username change.'),
-                this.$store.dispatch(
-                    'changeUsername',
+                // this.$store.dispatch(
+                //     'changeUsername',
+                //     this.$route.path.slice(1),
+                // ),
+                this.$store.commit(
+                    'UPDATE_USERNAME',
                     this.$route.path.slice(1),
                 ),
+                console.log('Username changed to ', this.username),
                 // console.log(this.username),
-                setTimeout(
-                    () => [
-                        this.$store.dispatch('fetchUsers'),
-                        this.$store.dispatch('fetchStarredRepos'),
-                        // console.log(this.username),
-                    ],
-                    100,
-                ),
+                // setTimeout(
+                //     () => [
+                this.$store.dispatch('fetchUsers'),
+                this.$store.dispatch('fetchStarredRepos'),
+                this.$store.dispatch('fetchPinnedRepos'),
+                this.$store.dispatch('fetchRepos', [30, 1]),
+                // console.log(this.username),
+                //     ],
+                //     100,
+                // ),
                 // console.log(this.username),
             ]
         },
@@ -174,8 +183,11 @@ export default {
     created() {
         return [
             // console.log(this.$route),
-            // console.log(this.requesting, this.presenting, this.user_exist),
+            console.log('Users is created.'),
+            console.log(this.requesting, this.presenting, this.user_exist),
             this.checkRouteName(),
+            // this.$store.dispatch('fetchPinnedRepos'),
+            // this.$store.dispatch('fetchRepos', [30, 1]),
         ]
     },
 

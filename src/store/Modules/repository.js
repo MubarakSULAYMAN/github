@@ -65,22 +65,27 @@ const actions = {
         commit('UPDATE_LOADING_MORE', val)
     },
 
-    changePageRequesting({ commit }, bool) {
-        commit('UPDATE_REQUESTING', bool)
-    },
+    // changePageRequesting({ commit }, bool) {
+    //     commit('UPDATE_REQUESTING', bool)
+    // },
 
     changePage({ commit }, new_page) {
         commit('UPDATE_PAGE', new_page)
     },
 
-    async fetchRepos({ commit, rootState, dispatch }, [per_page, page]) {
-        commit('UPDATE_REQUESTING', true)
+    // async fetchRepos({ commit, rootState, dispatch }, [per_page, page]) {
+    async fetchRepos({ commit, rootState }, [per_page, page]) {
+        // commit('UPDATE_REQUESTING', true)
+        // commit('UPDATE_PRESENTING', false)
+        // commit('UPDATE_USER_EXIST', false)
         commit('UPDATE_PER_PAGE', per_page)
         commit('UPDATE_PAGE', page)
         commit(
             'UPDATE_TOTAL_PAGES',
             Math.ceil(rootState.user.user_info.public_repos / state.per_page),
         )
+
+        console.log(per_page, page, rootState.requesting)
 
         // console.log(state.total_pages)
 
@@ -91,63 +96,74 @@ const actions = {
                 page,
             )
 
-            commit('UPDATE_REQUEST_STATUS', response.status)
-            commit('UPDATE_REPOS', response.data)
+            //     // commit('UPDATE_REQUEST_STATUS', response.status)
+            // commit('UPDATE_REPOS', response.data)
 
-            // console.log(response)
-            // console.log(response.status)
-            // console.log(rootState.request_status)
+            console.log(response)
+            console.log(response.status)
+            console.log(rootState.request_status)
+            console.log(
+                rootState.requesting,
+                rootState.presenting,
+                rootState.user_exist,
+            )
 
             if ([200, 201].includes(rootState.request_status)) {
-                commit('UPDATE_REQUESTING', false)
-                commit('UPDATE_PRESENTING', true)
-                commit('UPDATE_USER_EXIST', true)
+                commit('UPDATE_REPOS', response.data)
+                // commit('UPDATE_REQUESTING', false)
+                // commit('UPDATE_PRESENTING', true)
+                // commit('UPDATE_USER_EXIST', true)
             }
         } catch (e) {
-            dispatch('showWarning')
-            commit(
-                'UPDATE_ERROR_MESSAGE',
-                'An error occured while making your request, kindly refresh.',
-            )
-            // console.error(Promise.reject(e))
-            // console.error('request :', e.request.status)
-            // console.error('request :', e.response)
-            // console.error('response :', e.response.request.status)
+            console.log(e)
+            //     dispatch('showWarning')
+            //     commit(
+            //         'UPDATE_ERROR_MESSAGE',
+            //         'An error occured while making your request, kindly refresh.',
+            //     )
+            //     // console.error(Promise.reject(e))
+            //     // console.error('request :', e.request.status)
+            //     // console.error('request :', e.response)
+            //     // console.error('response :', e.response.request.status)
 
-            if (e.request.status === 0) {
-                commit('UPDATE_REQUESTING', true)
-                commit('UPDATE_PRESENTING', true)
-                commit('UPDATE_USER_EXIST', false)
-                dispatch('showWarning')
-                commit(
-                    'UPDATE_ERROR_MESSAGE',
-                    'Kindly check internet connection',
-                )
-            } else if ([403].includes(e.response.request.status)) {
-                commit('UPDATE_REQUESTING', true)
-                commit('UPDATE_PRESENTING', true)
-                commit('UPDATE_USER_EXIST', true)
-                dispatch('showWarning')
-                commit(
-                    'UPDATE_ERROR_MESSAGE',
-                    'An error occured, kindly check back soon.',
-                )
-            } else if ([404].includes(e.response.request.status)) {
-                commit('UPDATE_REQUESTING', false)
-                commit('UPDATE_PRESENTING', true)
-                commit('UPDATE_USER_EXIST', false)
-                dispatch('showWarning')
-                commit(
-                    'UPDATE_ERROR_MESSAGE',
-                    'Username maybe invalid, try again.',
-                )
-            }
+            //     if (e.request.status === 0) {
+            //         commit('UPDATE_REQUESTING', true)
+            //         commit('UPDATE_PRESENTING', true)
+            //         commit('UPDATE_USER_EXIST', false)
+            //         dispatch('showWarning')
+            //         commit(
+            //             'UPDATE_ERROR_MESSAGE',
+            //             'Kindly check internet connection',
+            //         )
+            //     } else if ([403].includes(e.response.request.status)) {
+            //         commit('UPDATE_REQUESTING', true)
+            //         commit('UPDATE_PRESENTING', true)
+            //         commit('UPDATE_USER_EXIST', true)
+            //         dispatch('showWarning')
+            //         commit(
+            //             'UPDATE_ERROR_MESSAGE',
+            //             'An error occured, kindly check back soon.',
+            //         )
+            //     } else if ([404].includes(e.response.request.status)) {
+            //         commit('UPDATE_REQUESTING', false)
+            //         commit('UPDATE_PRESENTING', true)
+            //         commit('UPDATE_USER_EXIST', false)
+            //         dispatch('showWarning')
+            //         commit(
+            //             'UPDATE_ERROR_MESSAGE',
+            //             'Username maybe invalid, try again.',
+            //         )
+            //     }
         }
     },
 
+    // async fetchCustomRepos({ commit, rootState }, [per_page, page]) {
     async fetchCustomRepos({ commit, rootState, dispatch }, [per_page, page]) {
         commit('UPDATE_C_PER_PAGE', per_page)
         commit('UPDATE_C_PAGE', page)
+        // console.log('Hello')
+        // console.log(per_page, page)
+        // console.log('Hello')
 
         try {
             let response = await RequestService.getRepos(
@@ -157,17 +173,27 @@ const actions = {
             )
 
             commit('UPDATE_REQUEST_STATUS', response.status)
-            commit('UPDATE_CUSTOM_REPOS', response.data)
+            // commit('UPDATE_CUSTOM_REPOS', response.data)
 
+            // console.log(response)
             // console.log(response.status)
             // console.log(rootState.request_status)
 
             if ([200, 201].includes(rootState.request_status)) {
+                commit('UPDATE_CUSTOM_REPOS', response.data)
                 commit('UPDATE_REQUESTING', false)
                 commit('UPDATE_PRESENTING', true)
                 commit('UPDATE_USER_EXIST', true)
+                console.log(rootState.request_status)
+                console.log(
+                    'Successful request',
+                    rootState.requesting,
+                    rootState.presenting,
+                    rootState.user_exist,
+                )
             }
         } catch (e) {
+            // console.log(e)
             dispatch('showWarning')
             commit(
                 'UPDATE_ERROR_MESSAGE',
@@ -215,16 +241,15 @@ const actions = {
                 rootState.user.username,
             )
             // console.log('Processing starred user...'),
-                commit('UPDATE_STARRED_REPOS', response.data)
+            commit('UPDATE_STARRED_REPOS', response.data)
 
             commit('UPDATE_REQUEST_STATUS', response.status)
             // console.log(rootState.request_status)
 
             if ([200, 201].includes(rootState.request_status)) {
-                commit('UPDATE_REQUESTING', false)
-                commit('UPDATE_PRESENTING', true)
-                commit('UPDATE_USER_EXIST', true)
-
+                // commit('UPDATE_REQUESTING', false)
+                // commit('UPDATE_PRESENTING', true)
+                // commit('UPDATE_USER_EXIST', true)
                 // console.log('Starred users here!')
             }
         } catch (e) {
@@ -235,27 +260,27 @@ const actions = {
             )
 
             if (e.request.status === 0) {
-                commit('UPDATE_REQUESTING', true)
-                commit('UPDATE_PRESENTING', true)
-                commit('UPDATE_USER_EXIST', false)
+                // commit('UPDATE_REQUESTING', true)
+                // commit('UPDATE_PRESENTING', true)
+                // commit('UPDATE_USER_EXIST', false)
                 dispatch('showWarning')
                 commit(
                     'UPDATE_ERROR_MESSAGE',
                     'Kindly check internet connection',
                 )
             } else if ([403].includes(e.response.request.status)) {
-                commit('UPDATE_REQUESTING', true)
-                commit('UPDATE_PRESENTING', true)
-                commit('UPDATE_USER_EXIST', true)
+                // commit('UPDATE_REQUESTING', true)
+                // commit('UPDATE_PRESENTING', true)
+                // commit('UPDATE_USER_EXIST', true)
                 dispatch('showWarning')
                 commit(
                     'UPDATE_ERROR_MESSAGE',
                     'An error occured, kindly check back soon.',
                 )
             } else if ([404].includes(e.response.request.status)) {
-                commit('UPDATE_REQUESTING', false)
-                commit('UPDATE_PRESENTING', true)
-                commit('UPDATE_USER_EXIST', false)
+                // commit('UPDATE_REQUESTING', false)
+                // commit('UPDATE_PRESENTING', true)
+                // commit('UPDATE_USER_EXIST', false)
                 dispatch('showWarning')
                 commit(
                     'UPDATE_ERROR_MESSAGE',
@@ -271,9 +296,10 @@ const actions = {
                 rootState.user.username,
             )
 
-            commit('UPDATE_PINNED_REPOS', response.data)
+            // commit('UPDATE_PINNED_REPOS', response.data)
 
             if ([200, 201].includes(rootState.request_status)) {
+                commit('UPDATE_PINNED_REPOS', response.data)
                 commit('UPDATE_REQUESTING', false)
                 commit('UPDATE_PRESENTING', true)
                 commit('UPDATE_USER_EXIST', true)

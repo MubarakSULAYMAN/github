@@ -11,13 +11,17 @@
 import TheShortcuts from '../views/layouts/TheShortcuts.vue'
 export default {
     components: { TheShortcuts },
+
+    created() {
+        return console.log('Invalid user is created')
+    },
 }
 </script>
 
 <style scoped>
 div:not(.note) {
     position: relative;
-    width: 100vw;
+    /* width: 100vw; */
     height: 100vh;
     font-family: 'Helvetica Rounded Bold';
     font-style: normal;

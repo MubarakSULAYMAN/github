@@ -260,6 +260,7 @@ export default {
         return [
             this.$store.dispatch('fetchRepos', [30, 1]),
             dayjs.extend(relativeTime, LocalizedFormat),
+            console.log('Repository is created'),
             // console.log(this.isFirstPage),
             // console.log(this.page),
             // console.log(this.isLastPage),
@@ -492,7 +493,7 @@ a span.issue:hover {
 }
 
 .disabled-btn {
-    opacity: 0.5;
+    opacity: 0.75;
     pointer-events: none;
 }
 

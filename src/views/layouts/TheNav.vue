@@ -140,6 +140,7 @@
                             :to="option.route"
                             v-for="option in main_options"
                             :key="option.name"
+                            @click.native="changeRoute(option.name)"
                         >
                             <!-- :to="{option.route, params: {username: username}}" -->
                             Your {{ option.name }}
@@ -277,6 +278,29 @@ export default {
             )
         },
 
+        changeRoute(route) {
+            console.log(route)
+            switch (route) {
+                case 'profile':
+                    this.$store.dispatch('fetchPinnedRepos')
+                    break
+                case 'repository':
+                    this.$store.dispatch('fetchRepos', [30, 1])
+                    break
+                // case 'project':
+                //     // code block
+                //     break
+                // case 'stars':
+                //     // code block
+                //     break
+                // case 'gists':
+                //     // code block
+                //     break
+                // default:
+                // // code block
+            }
+        },
+
         derivedData() {
             return [
                 {
@@ -289,15 +313,15 @@ export default {
                 },
                 {
                     name: 'projects',
-                    route: '/in-view',
+                    route: `/${this.username}?tab=projects`,
                 },
                 {
                     name: 'stars',
-                    route: '/in-view',
+                    route: `/${this.username}?tab=stars`,
                 },
                 {
                     name: 'gists',
-                    route: '/in-view',
+                    route: `/${this.username}?tab=packages`,
                 },
             ]
         },
@@ -317,7 +341,17 @@ export default {
     },
 
     created() {
-        return [this.$store.dispatch('fetchUsers')]
+        return [
+            this.$store.dispatch('fetchUsers'),
+            console.log(
+                this.username,
+                this.user_info,
+                // this.user_info.name,
+                // this.user_info.avatar_url,
+                this.user_exist,
+            ),
+            console.log('The nav is created.'),
+        ]
     },
 }
 </script>

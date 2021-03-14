@@ -2,11 +2,11 @@
     <div>
         <change-user-modal
             v-if="
-                matchCheck(false, false, true) || matchCheck(true, true, false)
+                matchCheck(false, false, false) || matchCheck(true, true, false)
             "
         />
 
-        <animated-octocat v-if="matchCheck(true, false, true)" />
+        <animated-octocat v-if="matchCheck(true, false, false)" />
 
         <invalid-user
             class="main-content"
@@ -53,6 +53,10 @@ import InvalidUser from '../components/InvalidUser.vue'
 import BrokenSystem from '../components/BrokenSystem.vue'
 
 export default {
+    title: 'Github',
+    //      title () {
+    //     return `Foo Page — ${this.someValue}`
+    //   },
     name: 'Home',
     components: {
         ErrorNotification,
@@ -89,6 +93,10 @@ export default {
             'user_exist',
         ]),
     },
+
+    // created() {
+    //     return [this.$store.dispatch('fetchUsers')]
+    // },
 }
 </script>
 

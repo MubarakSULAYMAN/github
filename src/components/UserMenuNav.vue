@@ -115,6 +115,10 @@ export default {
             user_info: state => state.user.user_info,
         }),
     },
+
+    created() {
+        return console.log('User menu nav is created')
+    },
 }
 </script>
 
