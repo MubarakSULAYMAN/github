@@ -19,7 +19,7 @@
                     :key="repo.name"
                 >
                     <a
-                        :href="repo.url"
+                        :href="repo.html_url"
                         target="_blank"
                         rel="noopener noreferrer"
                         >{{ repo.full_name }}</a

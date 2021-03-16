@@ -311,6 +311,13 @@
 import { mapState } from 'vuex'
 
 export default {
+    name: 'Overview',
+    metaInfo() {
+        return {
+            titleTemplate: `${this.newMetaInfo()}`,
+        }
+    },
+
     data() {
         return {
             active_years: [],
@@ -327,6 +334,14 @@ export default {
                 this.active_years.push(i)
             }
         },
+
+        newMetaInfo() {
+            if (this.user_info.name != null) {
+                return `${this.user_info.login} (${this.user_info.name})`
+            }
+
+            return this.user_info.login
+        },
     },
 
     created() {
@@ -335,10 +350,10 @@ export default {
 
     computed: {
         ...mapState({
-            pinned_repos: state => state.repository.pinned_repos,
-            pinned_loading: state => state.repository.pinned_loading,
-            username: state => state.user.username,
-            user_info: state => state.user.user_info,
+            pinned_repos: (state) => state.repository.pinned_repos,
+            pinned_loading: (state) => state.repository.pinned_loading,
+            username: (state) => state.user.username,
+            user_info: (state) => state.user.user_info,
         }),
     },
 }

@@ -206,6 +206,13 @@ import LocalizedFormat from 'dayjs/plugin/relativeTime'
 import { mapState } from 'vuex'
 
 export default {
+    name: 'Repository',
+    metaInfo() {
+        return {
+            titleTemplate: `Your Repositories - ${this.user_info.login} (${this.user_info.name})`,
+        }
+    },
+
     data() {
         return {
             langColors: {
@@ -238,13 +245,22 @@ export default {
                 this.$store.dispatch('fetchRepos', [30, newPage])
             }
         },
+
+        newMetaInfo() {
+            if (this.user_info.name != null) {
+                return `${this.user_info.login} (${this.user_info.name})`
+            }
+
+            return this.user_info.login
+        },
     },
 
     computed: {
         ...mapState({
-            repos: state => state.repository.repos,
-            page: state => state.repository.page,
-            total_pages: state => state.repository.total_pages,
+            user_info: (state) => state.user.user_info,
+            repos: (state) => state.repository.repos,
+            page: (state) => state.repository.page,
+            total_pages: (state) => state.repository.total_pages,
         }),
 
         isFirstPage() {
@@ -274,18 +290,12 @@ export default {
                 return null
             }
 
-            if (
-                dayjs(date)
-                    .fromNow()
-                    .includes('year')
-            ) {
+            if (dayjs(date).fromNow().includes('year')) {
                 return `on ${dayjs(date).format('D MMM YYYY')}`
             }
 
             if (
-                dayjs(date)
-                    .fromNow()
-                    .includes('month') &&
+                dayjs(date).fromNow().includes('month') &&
                 parseInt(String(date).slice(0, 4)) === new Date().getFullYear()
             ) {
                 return `on ${dayjs(date).format('D MMM')}`

@@ -43,8 +43,7 @@
                     v-model="search_term"
                     @focus="hide_slash = true"
                     @blur="hide_slash = false"
-                    ref="search"
-                    v-on:keyup.page-up="setSearchFocus"
+                    ref="searchInput"
                 />
                 <!-- @keypress.s="setSearchFocus" -->
                 <!-- .exact -->
@@ -325,6 +324,18 @@ export default {
                 },
             ]
         },
+
+        doCommand(e) {
+		// let cmd = String.fromCharCode(e.keyCode).toLowerCase();
+		// do stuff
+        if (e.key === 's') {
+                e.preventDefault()
+                // this.$nextTick(() => this.$refs.searchInput.$el.focus())
+                // this.$nextTick(() => this.$refs.searchInput.focus())
+                this.$refs.searchInput.focus()
+                // this.$refs.searchInput.$el.focus()
+            }
+	},
     },
 
     computed: {
@@ -341,6 +352,8 @@ export default {
     },
 
     created() {
+        window.addEventListener('keypress', this.doCommand)
+
         return [
             this.$store.dispatch('fetchUsers'),
             console.log(
@@ -352,6 +365,14 @@ export default {
             ),
             console.log('The nav is created.'),
         ]
+    },
+
+    // beforeDestroy() {
+    //     window.removeEventListener('keypress', this.doCommand)
+    // },
+
+    destroyed() {
+        window.removeEventListener('keypress', this.doCommand)
     },
 }
 </script>
