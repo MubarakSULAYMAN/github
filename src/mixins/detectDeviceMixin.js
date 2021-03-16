@@ -1,4 +1,3 @@
-// function getTitle(vm) { }
 function deviceType() {
     const ua = navigator.userAgent
 

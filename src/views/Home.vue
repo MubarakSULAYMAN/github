@@ -54,9 +54,6 @@ import BrokenSystem from '../components/BrokenSystem.vue'
 
 export default {
     title: 'Github',
-    //      title () {
-    //     return `Foo Page — ${this.someValue}`
-    //   },
     name: 'Home',
     components: {
         ErrorNotification,
@@ -93,10 +90,6 @@ export default {
             'user_exist',
         ]),
     },
-
-    // created() {
-    //     return [this.$store.dispatch('fetchUsers')]
-    // },
 }
 </script>
 

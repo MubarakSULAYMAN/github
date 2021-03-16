@@ -38,7 +38,6 @@ const routes = [
     },
 
     {
-        // path: '/:username(/^/MubarakSULAYMAN$/)',
         path: '/:username',
         name: 'Users',
         component: Users,

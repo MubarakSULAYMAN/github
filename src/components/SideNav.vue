@@ -233,12 +233,9 @@ export default {
     //     window.addEventListener('scroll', this.handleScroll)
     // },
 
-    // created() {
-    //     window.addEventListener('scroll', this.handleScroll)
-    // },
-
     created() {
         return (
+            //     window.addEventListener('scroll', this.handleScroll),
             this.$store.dispatch('fetchUsers'),
             console.log('Side nav is created')
         )

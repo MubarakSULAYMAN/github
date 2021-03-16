@@ -118,10 +118,6 @@ export default {
         }),
     },
 
-    // created() {
-    //     return [console.log(this.request_status)]
-    // },
-
     created() {
         return console.log('Home side nav is created')
     },

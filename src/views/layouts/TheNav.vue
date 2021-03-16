@@ -139,9 +139,8 @@
                             :to="option.route"
                             v-for="option in main_options"
                             :key="option.name"
-                            @click.native="changeRoute(option.name)"
                         >
-                            <!-- :to="{option.route, params: {username: username}}" -->
+                            <!-- @click.native="changeRoute(option.name)" -->
                             Your {{ option.name }}
                         </router-link>
 
@@ -277,28 +276,28 @@ export default {
             )
         },
 
-        changeRoute(route) {
-            console.log(route)
-            switch (route) {
-                case 'profile':
-                    this.$store.dispatch('fetchPinnedRepos')
-                    break
-                case 'repository':
-                    this.$store.dispatch('fetchRepos', [30, 1])
-                    break
-                // case 'project':
-                //     // code block
-                //     break
-                // case 'stars':
-                //     // code block
-                //     break
-                // case 'gists':
-                //     // code block
-                //     break
-                // default:
-                // // code block
-            }
-        },
+        // changeRoute(route) {
+        //     console.log(route)
+        //     switch (route) {
+        //         case 'profile':
+        //             this.$store.dispatch('fetchPinnedRepos')
+        //             break
+        //         case 'repository':
+        //             this.$store.dispatch('fetchRepos', [30, 1])
+        //             break
+        //         // case 'project':
+        //         //     // code block
+        //         //     break
+        //         // case 'stars':
+        //         //     // code block
+        //         //     break
+        //         // case 'gists':
+        //         //     // code block
+        //         //     break
+        //         // default:
+        //         // // code block
+        //     }
+        // },
 
         derivedData() {
             return [
@@ -325,17 +324,14 @@ export default {
             ]
         },
 
-        doCommand(e) {
-		// let cmd = String.fromCharCode(e.keyCode).toLowerCase();
-		// do stuff
-        if (e.key === 's') {
+        focusNavInput(e) {
+            let cmd = String.fromCharCode(e.keyCode).toLowerCase()
+            // e.key
+            if (cmd === 's') {
                 e.preventDefault()
-                // this.$nextTick(() => this.$refs.searchInput.$el.focus())
-                // this.$nextTick(() => this.$refs.searchInput.focus())
                 this.$refs.searchInput.focus()
-                // this.$refs.searchInput.$el.focus()
             }
-	},
+        },
     },
 
     computed: {
@@ -352,7 +348,7 @@ export default {
     },
 
     created() {
-        window.addEventListener('keypress', this.doCommand)
+        window.addEventListener('keypress', this.focusNavInput)
 
         return [
             this.$store.dispatch('fetchUsers'),
@@ -367,12 +363,8 @@ export default {
         ]
     },
 
-    // beforeDestroy() {
-    //     window.removeEventListener('keypress', this.doCommand)
-    // },
-
-    destroyed() {
-        window.removeEventListener('keypress', this.doCommand)
+    beforeDestroy() {
+        window.removeEventListener('keypress', this.focusNavInput)
     },
 }
 </script>

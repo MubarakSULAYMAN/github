@@ -257,10 +257,10 @@ export default {
 
     computed: {
         ...mapState({
-            user_info: (state) => state.user.user_info,
-            repos: (state) => state.repository.repos,
-            page: (state) => state.repository.page,
-            total_pages: (state) => state.repository.total_pages,
+            user_info: state => state.user.user_info,
+            repos: state => state.repository.repos,
+            page: state => state.repository.page,
+            total_pages: state => state.repository.total_pages,
         }),
 
         isFirstPage() {
@@ -277,10 +277,6 @@ export default {
             this.$store.dispatch('fetchRepos', [30, 1]),
             dayjs.extend(relativeTime, LocalizedFormat),
             console.log('Repository is created'),
-            // console.log(this.isFirstPage),
-            // console.log(this.page),
-            // console.log(this.isLastPage),
-            // console.log(this.total_pages),
         ]
     },
 
@@ -290,12 +286,18 @@ export default {
                 return null
             }
 
-            if (dayjs(date).fromNow().includes('year')) {
+            if (
+                dayjs(date)
+                    .fromNow()
+                    .includes('year')
+            ) {
                 return `on ${dayjs(date).format('D MMM YYYY')}`
             }
 
             if (
-                dayjs(date).fromNow().includes('month') &&
+                dayjs(date)
+                    .fromNow()
+                    .includes('month') &&
                 parseInt(String(date).slice(0, 4)) === new Date().getFullYear()
             ) {
                 return `on ${dayjs(date).format('D MMM')}`

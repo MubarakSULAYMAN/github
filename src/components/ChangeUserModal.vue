@@ -35,11 +35,9 @@ export default {
                     this.$store.commit('UPDATE_REQUESTING', true),
                     this.$store.commit('UPDATE_PRESENTING', false),
                     this.$store.commit('UPDATE_USER_EXIST', false),
-                    // this.$store.dispatch('fetchUsers'),
                     this.$store
                         .dispatch('fetchCustomRepos', [7, 1])
                         .then(this.$store.dispatch('fetchUsers')),
-                    // this.$store.dispatch('changePageRequesting', true),
                     (this.processing = true),
                 ]
             }
