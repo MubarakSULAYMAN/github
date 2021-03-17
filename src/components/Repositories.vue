@@ -4,7 +4,7 @@
             <input
                 type="text"
                 name=""
-                id=""
+                id="find-repo"
                 class="find-repo"
                 placeholder="Find a repository..."
             />
@@ -176,10 +176,24 @@
 
         <div class="paginate flex-row">
             <router-link to="" custom>
-                <button disabled role="link">Previous</button>
+                <button
+                    :disabled="isFirstPage"
+                    :class="[isFirstPage ? 'disabled-btn' : '']"
+                    role="link"
+                    @click="gotoPrevious"
+                >
+                    Previous
+                </button>
             </router-link>
             <router-link to="" custom>
-                <button role="link">Next</button>
+                <button
+                    :disabled="isLastPage"
+                    :class="[isLastPage ? 'disabled-btn' : '']"
+                    role="link"
+                    @click="gotoNext"
+                >
+                    Next
+                </button>
             </router-link>
         </div>
     </div>
@@ -192,6 +206,13 @@ import LocalizedFormat from 'dayjs/plugin/relativeTime'
 import { mapState } from 'vuex'
 
 export default {
+    name: 'Repository',
+    metaInfo() {
+        return {
+            titleTemplate: `Your Repositories - ${this.newMetaInfo()}`,
+        }
+    },
+
     data() {
         return {
             langColors: {
@@ -208,14 +229,55 @@ export default {
         }
     },
 
+    methods: {
+        gotoPrevious() {
+            if (!this.isFirstPage) {
+                let newPage = this.page - 1
+                this.$store.dispatch('changePage', newPage)
+                this.$store.dispatch('fetchRepos', [30, newPage])
+            }
+        },
+
+        gotoNext() {
+            if (!this.isLastPage) {
+                let newPage = this.page + 1
+                this.$store.dispatch('changePage', newPage)
+                this.$store.dispatch('fetchRepos', [30, newPage])
+            }
+        },
+
+        newMetaInfo() {
+            if (this.user_info.name != null) {
+                return `${this.user_info.login} (${this.user_info.name})`
+            }
+
+            return this.user_info.login
+        },
+    },
+
     computed: {
-        ...mapState({ repos: state => state.repository.repos }),
-        // pinned_repos: state => state.repository.pinned_repos,
-        // pinned_loading: state => state.repository.pinned_loading,
+        ...mapState({
+            user_info: state => state.user.user_info,
+            repos: state => state.repository.repos,
+            page: state => state.repository.page,
+            total_pages: state => state.repository.total_pages,
+        }),
+
+        isFirstPage() {
+            return this.page === 1
+        },
+
+        isLastPage() {
+            return this.page === this.total_pages
+        },
     },
 
     created() {
-        dayjs.extend(relativeTime, LocalizedFormat)
+        return [
+            this.$store.dispatch('fetchRepos', [30, 1]),
+            dayjs.extend(relativeTime, LocalizedFormat),
+            console.log('Repository is created'),
+        ]
     },
 
     filters: {
@@ -442,8 +504,9 @@ a span.issue:hover {
     outline: none;
 }
 
-.paginate a:first-child button {
-    opacity: 0.5;
+.disabled-btn {
+    opacity: 0.75;
+    pointer-events: none;
 }
 
 @media only screen and (max-width: 768px) {

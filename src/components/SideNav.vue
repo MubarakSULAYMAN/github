@@ -24,7 +24,7 @@
         <div class="main-details">
             <button class="status">Status</button>
 
-            <p class="bio">
+            <p class="bio" v-if="user_info.bio != null">
                 {{ user_info.bio }}
             </p>
 
@@ -76,7 +76,7 @@
                 </div>
 
                 <div class="other-details">
-                    <p class="work">
+                    <p class="work" v-if="user_info.company != null">
                         <svg
                             class="octicon octicon-organization mr-1"
                             viewBox="0 0 16 16"
@@ -93,7 +93,7 @@
                         </svg>
                         {{ user_info.company }}
                     </p>
-                    <p class="location">
+                    <p class="location" v-if="user_info.location != null">
                         <svg
                             class="octicon octicon-location mr-1"
                             viewBox="0 0 16 16"
@@ -110,7 +110,7 @@
                         </svg>
                         {{ user_info.location }}
                     </p>
-                    <p class="email link">
+                    <p class="email link" v-if="user_info.email != null">
                         <svg
                             class="octicon octicon-mail mr-1"
                             viewBox="0 0 16 16"
@@ -129,7 +129,7 @@
                             user_info.email
                         }}</a>
                     </p>
-                    <p class="website link">
+                    <p class="website link" v-if="user_info.blog != ''">
                         <svg
                             class="octicon octicon-link mr-1"
                             viewBox="0 0 16 16"
@@ -151,7 +151,10 @@
                             >{{ user_info.blog }}</a
                         >
                     </p>
-                    <p class="twitter link">
+                    <p
+                        class="twitter link"
+                        v-if="user_info.twitter_username != null"
+                    >
                         <!-- <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 273.5 222.3"
@@ -230,9 +233,13 @@ export default {
     //     window.addEventListener('scroll', this.handleScroll)
     // },
 
-    // created() {
-    //     window.addEventListener('scroll', this.handleScroll)
-    // },
+    created() {
+        return (
+            //     window.addEventListener('scroll', this.handleScroll),
+            this.$store.dispatch('fetchUsers'),
+            console.log('Side nav is created')
+        )
+    },
 
     // watch: {
     //     this.scrollAction
@@ -261,6 +268,7 @@ p,
     width: var(--custom-size);
     height: var(--custom-size);
     margin-bottom: 1rem;
+    z-index: 9999 !important;
 }
 
 img.profile-pic {

@@ -32,7 +32,12 @@ export default {
         getUser() {
             if (this.username !== '') {
                 return [
-                    this.$store.dispatch('fetchRepos'),
+                    this.$store.commit('UPDATE_REQUESTING', true),
+                    this.$store.commit('UPDATE_PRESENTING', false),
+                    this.$store.commit('UPDATE_USER_EXIST', false),
+                    this.$store
+                        .dispatch('fetchCustomRepos', [7, 1])
+                        .then(this.$store.dispatch('fetchUsers')),
                     (this.processing = true),
                 ]
             }
@@ -69,7 +74,7 @@ export default {
     position: absolute;
     top: 50%;
     left: 50%;
-    min-width: 40rem;
+    width: 40rem;
     padding: 2rem;
     border: 1px solid var(--github-gray-dark);
     border-radius: 1rem;
@@ -94,6 +99,14 @@ p:nth-child(3) {
 
 input {
     margin: 0.5rem 0;
+    width: 100%;
+}
+
+input:hover,
+input:focus,
+button:hover,
+button:focus {
+    box-shadow: 0 0 0 3px var(--github-lighter-blue);
 }
 
 input,
@@ -112,7 +125,6 @@ button {
 
 button:hover {
     color: var(--github-blue);
-    box-shadow: 0 0 0 3px var(--github-lighter-blue);
 }
 
 button:focus {
@@ -123,7 +135,7 @@ button:focus {
 
 @media only screen and (max-width: 425px) {
     .content {
-        max-width: 50vw;
+        width: 70%;
     }
 
     p:first-child {

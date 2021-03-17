@@ -70,7 +70,11 @@
 </template>
 
 <script>
-export default {}
+export default {
+    created() {
+        return console.log('Animated is created')
+    },
+}
 </script>
 
 <style scoped>

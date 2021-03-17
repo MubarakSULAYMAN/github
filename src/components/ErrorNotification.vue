@@ -13,7 +13,10 @@ import { mapState } from 'vuex'
 
 export default {
     created() {
-        return [this.$store.dispatch('showWarning')]
+        return [
+            this.$store.dispatch('showWarning'),
+            console.log('Error notification is created'),
+        ]
     },
 
     computed: {

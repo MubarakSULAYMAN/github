@@ -25,7 +25,7 @@
                 width="32"
                 fill="#ffffff"
                 aria-hidden="true"
-                @click="goTo('/')"
+                @click="home"
             >
                 <path
                     fill-rule="evenodd"
@@ -43,8 +43,7 @@
                     v-model="search_term"
                     @focus="hide_slash = true"
                     @blur="hide_slash = false"
-                    ref="search"
-                    v-on:keyup.page-up="setSearchFocus"
+                    ref="searchInput"
                 />
                 <!-- @keypress.s="setSearchFocus" -->
                 <!-- .exact -->
@@ -68,7 +67,7 @@
                 {{ route.name }}
             </router-link>
 
-            <div class="nav_extras flex-row ml-auto">
+            <div class="nav_extras flex-row ml-auto" v-if="user_exist">
                 <svg
                     class="octicon octicon-bell"
                     viewBox="0 0 16 16"
@@ -141,7 +140,7 @@
                             v-for="option in main_options"
                             :key="option.name"
                         >
-                            <!-- :to="{option.route, params: {username: username}}" -->
+                            <!-- @click.native="changeRoute(option.name)" -->
                             Your {{ option.name }}
                         </router-link>
 
@@ -271,6 +270,35 @@ export default {
             this.$router.push(route)
         },
 
+        home() {
+            return (
+                this.goTo('/'), this.$store.dispatch('fetchCustomRepos', [7, 1])
+            )
+        },
+
+        // changeRoute(route) {
+        //     console.log(route)
+        //     switch (route) {
+        //         case 'profile':
+        //             this.$store.dispatch('fetchPinnedRepos')
+        //             break
+        //         case 'repository':
+        //             this.$store.dispatch('fetchRepos', [30, 1])
+        //             break
+        //         // case 'project':
+        //         //     // code block
+        //         //     break
+        //         // case 'stars':
+        //         //     // code block
+        //         //     break
+        //         // case 'gists':
+        //         //     // code block
+        //         //     break
+        //         // default:
+        //         // // code block
+        //     }
+        // },
+
         derivedData() {
             return [
                 {
@@ -283,24 +311,42 @@ export default {
                 },
                 {
                     name: 'projects',
-                    route: '/in-view',
+                    route: `/${this.username}?tab=projects`,
                 },
                 {
                     name: 'stars',
-                    route: '/in-view',
+                    route: `/${this.username}?tab=stars`,
                 },
                 {
                     name: 'gists',
-                    route: '/in-view',
+                    route: `/${this.username}?tab=packages`,
                 },
             ]
         },
+
+        // focusNavInput(e) {
+        //     let keyPressed = String.fromCharCode(e.keyCode).toLowerCase()
+        //     // e.key
+        //     // if (this === document.activeElement)
+        //     // document.hasFocus()
+        //     let evt = evt||window.event
+        //     let ctrlDown = evt.ctrlKey||evt.metaKey
+
+        //     // if (this.$refs.findRepo === document.activeElement) {
+        //         if (ctrlDown && keyPressed === 's') {
+        //             e.preventDefault()
+        //             this.$refs.searchInput.focus()
+        //         }
+        //     // }
+        // },
     },
 
     computed: {
         main_options() {
             return this.derivedData()
         },
+
+        ...mapState(['user_exist']),
 
         ...mapState({
             username: state => state.user.username,
@@ -309,7 +355,23 @@ export default {
     },
 
     created() {
-        return [this.$store.dispatch('fetchUsers')]
+        window.addEventListener('keypress', this.focusNavInput)
+
+        return [
+            this.$store.dispatch('fetchUsers'),
+            console.log(
+                this.username,
+                this.user_info,
+                // this.user_info.name,
+                // this.user_info.avatar_url,
+                this.user_exist,
+            ),
+            console.log('The nav is created.'),
+        ]
+    },
+
+    beforeDestroy() {
+        window.removeEventListener('keypress', this.focusNavInput)
     },
 }
 </script>

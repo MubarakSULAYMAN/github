@@ -60,11 +60,11 @@ html {
     box-sizing: border-box;
 }
 
-:focus:not(:focus-visible) {
+*:focus:not(:focus-visible) {
     outline: none;
 }
 
-:focus:not(:-moz-focusring) {
+*:focus:not(:-moz-focusring) {
     outline: none;
 }
 

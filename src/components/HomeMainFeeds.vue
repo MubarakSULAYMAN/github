@@ -350,6 +350,10 @@ export default {
             has_error: false,
         }
     },
+
+    created() {
+        return console.log('Home main feeds is created')
+    },
 }
 </script>
 
