@@ -10,6 +10,7 @@
                 type="text"
                 placeholder="Find a repository..."
                 v-model="filter_term"
+                ref="findRepo"
             />
 
             <div class="repositories">

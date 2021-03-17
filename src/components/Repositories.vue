@@ -209,7 +209,7 @@ export default {
     name: 'Repository',
     metaInfo() {
         return {
-            titleTemplate: `Your Repositories - ${this.user_info.login} (${this.user_info.name})`,
+            titleTemplate: `Your Repositories - ${this.newMetaInfo()}`,
         }
     },
 

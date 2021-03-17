@@ -324,14 +324,21 @@ export default {
             ]
         },
 
-        focusNavInput(e) {
-            let cmd = String.fromCharCode(e.keyCode).toLowerCase()
-            // e.key
-            if (cmd === 's') {
-                e.preventDefault()
-                this.$refs.searchInput.focus()
-            }
-        },
+        // focusNavInput(e) {
+        //     let keyPressed = String.fromCharCode(e.keyCode).toLowerCase()
+        //     // e.key
+        //     // if (this === document.activeElement)
+        //     // document.hasFocus()
+        //     let evt = evt||window.event
+        //     let ctrlDown = evt.ctrlKey||evt.metaKey
+
+        //     // if (this.$refs.findRepo === document.activeElement) {
+        //         if (ctrlDown && keyPressed === 's') {
+        //             e.preventDefault()
+        //             this.$refs.searchInput.focus()
+        //         }
+        //     // }
+        // },
     },
 
     computed: {
